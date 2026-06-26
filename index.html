@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java DSA Learning Hub - Interactive Study Platform</title>
+    <!-- Style link -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app-container">
+        
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar">
+            <div class="brand-section">
+                <div class="brand-logo">J</div>
+                <h1 class="brand-title">Java DSA Hub</h1>
+            </div>
+            
+            <div class="search-section">
+                <div class="search-wrapper">
+                    <input type="text" id="sidebar-search" class="search-input" placeholder="Search topics (e.g. Binary Search)...">
+                </div>
+            </div>
+            
+            <nav class="nav-menu" id="nav-menu-container">
+                <!-- Dynamically populated from data.js -->
+            </nav>
+        </aside>
+
+        <!-- Main Content Shell -->
+        <main>
+            
+            <!-- Header Bar -->
+            <header>
+                <div class="header-tabs">
+                    <button class="tab-btn active" data-view="home">Home</button>
+                    <button class="tab-btn" data-view="cheat">Cheat Sheet</button>
+                    <button class="tab-btn" data-view="dict">Syntax Lookup</button>
+                </div>
+                <div id="breadcrumb" class="breadcrumb"></div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-wrapper">
+
+                <!-- 1. HOME VIEW -->
+                <div id="home-view" class="welcome-panel">
+                    <div class="welcome-logo">◈</div>
+                    <h2 class="welcome-title">Learn Java & DSA through logic, not rote memorization</h2>
+                    <p class="welcome-desc">
+                        This educational platform divides complex algorithms into the <strong>ISPO Framework</strong> (Input, Storage, Process, Output) and combines them with interactive, step-by-step visualizers to help you master programming fundamentals.
+                    </p>
+                    <div class="welcome-actions">
+                        <button class="primary-btn" onclick="window.location.hash='#unit=unit_0&topic=structure_io'">Get Started (Unit 0)</button>
+                        <button class="tab-btn" onclick="window.location.hash='#view=dict'" style="border: 1px solid var(--border-color);">Browse Syntax Dictionary</button>
+                    </div>
+                </div>
+
+                <!-- 2. LEARN / TOPIC STUDY VIEW -->
+                <div id="learn-view" style="display: none;">
+                    
+                    <!-- Topic Header & Description -->
+                    <div class="card" style="margin-bottom: 24px;">
+                        <div class="topic-header-section">
+                            <div>
+                                <h2 id="topic-title" style="color: #fff; font-size: 24px; font-weight: 800; margin-bottom: 8px;">Topic Title</h2>
+                                <p id="topic-desc" style="color: var(--text-muted); font-size: 15px; line-height: 1.6;">Topic description text goes here.</p>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+                                <span id="complexity-time" class="complexity-badge">Time: O(1)</span>
+                                <span id="complexity-space" class="complexity-badge">Space: O(1)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Topic Cheat Sheet Syntax Card -->
+                    <div class="card" style="margin-bottom: 24px;">
+                        <h3 class="card-title">Core Pattern &amp; Syntax</h3>
+                        <pre id="topic-cheatsheet" style="background: #0d0b13; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.5; color: var(--text-main); overflow-x: auto; white-space: pre-wrap;"></pre>
+                    </div>
+
+                    <!-- Interactive Code & ISPO Breakdown Layout -->
+                    <div class="card" style="margin-bottom: 24px;">
+                        <h3 class="card-title">Code Explorer</h3>
+                        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">
+                            Highlight the lines responsible for 
+                            <span style="color: var(--color-input); font-weight:700;">Input</span>, 
+                            <span style="color: var(--color-storage); font-weight:700;">Storage</span>, 
+                            <span style="color: var(--color-process); font-weight:700;">Process</span>, or 
+                            <span style="color: var(--color-output); font-weight:700;">Output</span>.
+                        </p>
+                        
+                        <div class="ispo-container">
+                            <!-- Code Viewer -->
+                            <div class="code-viewer-panel">
+                                <div class="code-header">
+                                    <span class="code-language">Java Implementation</span>
+                                </div>
+                                <div class="code-body" id="code-body-container">
+                                    <!-- Populated dynamically by script.js -->
+                                </div>
+                            </div>
+                            
+                            <!-- Control Panel & Descriptions -->
+                            <div style="display: flex; flex-direction: column; gap: 16px;">
+                                <div class="ispo-controls" id="ispo-controls-container">
+                                    <!-- Buttons generated dynamically -->
+                                </div>
+                                <div class="card" style="background: rgba(255,255,255,0.01); border: 1px dashed var(--border-color); flex: 1;">
+                                    <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 8px; color:#fff;">Logical Breakdown Analysis</h4>
+                                    <div id="ispo-detail-text" style="font-size: 13px; line-height: 1.5; color: var(--text-muted);">
+                                        Click an aspect above to analyze.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Visualizer Canvas Panel -->
+                    <div class="card" id="visualizer-container" style="margin-bottom: 24px; display: none;">
+                        <h3 class="card-title">Visualizer</h3>
+                        <div class="visualizer-wrapper">
+                            <canvas id="visualizer-canvas" width="700" height="250"></canvas>
+                            <div class="viz-controls">
+                                <button class="btn-icon" id="viz-prev-btn" title="Step Backward">◀</button>
+                                <button class="btn-icon" id="viz-reset-btn" title="Reset Simulation">⟳</button>
+                                <button class="btn-icon" id="viz-next-btn" title="Step Forward">▶</button>
+                            </div>
+                            <div id="visualizer-status">Initializing Animator...</div>
+                        </div>
+                    </div>
+
+                    <!-- Practice Quiz self-assessment Card -->
+                    <div class="card">
+                        <h3 class="card-title">Practice Quiz</h3>
+                        <div class="practice-container" id="quiz-body-container">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 3. CHEAT SHEET VIEW -->
+                <div id="cheat-view" style="display: none;">
+                    <div class="card" style="margin-bottom: 24px;">
+                        <h2 style="color: #fff; font-weight: 800; font-size: 22px; margin-bottom: 8px;">Java Collections Cheat Sheet</h2>
+                        <p style="color: var(--text-muted); font-size: 14px;">Quick reference syntax templates for core Java data structure primitives and helper utilities.</p>
+                    </div>
+                    <div id="cheatsheet-list">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- 4. SYNTAX LOOKUP VIEW -->
+                <div id="dict-view" style="display: none;">
+                    <div class="card" style="margin-bottom: 24px;">
+                        <h2 style="color: #fff; font-weight: 800; font-size: 22px; margin-bottom: 12px;">Java Syntax & Keyword Dictionary</h2>
+                        <input type="text" id="dict-search-input" class="search-input" placeholder="Type to search syntax structures (e.g. ArrayList, Stack)...">
+                    </div>
+                    <div class="dict-grid" id="dict-list-container">
+                        <!-- Cards populated dynamically -->
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Glassmorphic Modal Overlay for Dictionary syntax copy popup -->
+    <div class="modal-overlay" id="dict-modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal-btn" id="close-modal-btn">×</button>
+            <div class="modal-body">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <h3 id="modal-title-text" style="color: var(--primary); font-size: 20px; font-weight: 800;">Structure Title</h3>
+                    <span class="complexity-badge" id="modal-type-tag">Collection</span>
+                </div>
+                <p id="modal-desc-text" style="color: var(--text-muted); font-size: 14px; line-height: 1.6; margin-bottom: 16px;">Description text.</p>
+                <h4 style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 8px;">Usage Reference Syntax</h4>
+                <pre id="modal-code-body"></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="visualizers.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
