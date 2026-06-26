@@ -1,0 +1,123 @@
+{
+  "id": "unit_5",
+  "title": "Unit 5: Stack",
+  "description": "Learn about the Last-In-First-Out (LIFO) linear structure and its applications like syntax parsing and evaluation.",
+  "topics": [
+    {
+      "id": "stack_impl",
+      "title": "5.1 Stack Implementation (Linked List)",
+      "description": "Implement a LIFO structure where elements are pushed and popped from the head, avoiding capacity constraints.",
+      "complexity": { "time": "O(1) for push, pop, and peek", "space": "O(n) to store n elements" },
+      "cheatSheet": "class Node { int data; Node next; }\nNode top = null;\n// Push: Node n = new Node(val); n.next = top; top = n;\n// Pop: int val = top.data; top = top.next; return val;",
+      "code": "public class LinkedListStack {\n    // Storage: Define Node structure\n    private static class Node {\n        int data;\n        Node next;\n        Node(int data) { this.data = data; }\n    }\n    \n    private Node top = null; // Top of the stack reference\n    \n    // Process & Storage: Push value\n    public void push(int value) {\n        Node newNode = new Node(value);\n        newNode.next = top;\n        top = newNode;\n    }\n    \n    // Process & Storage: Pop value\n    public int pop() {\n        if (top == null) {\n            throw new IllegalStateException(\"Stack is empty\");\n        }\n        int poppedValue = top.data;\n        top = top.next; // Move head reference\n        return poppedValue; // Output\n    }\n    \n    // Output: Peek value\n    public int peek() {\n        if (top == null) throw new IllegalStateException(\"Stack is empty\");\n        return top.data;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 12, "end": 12, "desc": "Accepts integer value to push on stack." },
+        { "type": "storage", "start": 3, "end": 7, "desc": "Defines Node class containing data and next pointer in memory." },
+        { "type": "storage", "start": 9, "end": 9, "desc": "Declares top reference representing LIFO stack entry point." },
+        { "type": "storage", "start": 13, "end": 13, "desc": "Allocates a new Node object in heap memory." },
+        { "type": "storage", "start": 23, "end": 23, "desc": "Creates poppedValue variable to hold popped node data value prior to deletion." },
+        { "type": "process", "start": 13, "end": 15, "desc": "Links new node to current top and updates top reference to point to new node." },
+        { "type": "process", "start": 20, "end": 24, "desc": "Validates stack is not empty, reads top data, and shifts top pointer to next node." },
+        { "type": "output", "start": 25, "end": 25, "desc": "Returns popped integer value." },
+        { "type": "output", "start": 31, "end": 31, "desc": "Returns top element data value." }
+      ],
+      "quiz": [
+        {
+          "q": "Which acronym describes the insertion and removal ordering of a Stack?",
+          "o": ["FIFO (First In First Out)", "LIFO (Last In First Out)", "LILO (Last In Last Out)", "Random Access"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "bracket_balance",
+      "title": "5.2 Balanced Parentheses Checking",
+      "description": "Use a Stack to check if delimiters like (), [], {} are matched and closed in proper order.",
+      "complexity": { "time": "O(n)", "space": "O(n) stack memory" },
+      "cheatSheet": "Stack<Character> s = new Stack<>();\nfor(char c : str.toCharArray()) {\n  if(c == '(' || c == '{' || c == '[') s.push(c);\n  else if(c == ')' && !s.isEmpty() && s.peek() == '(') s.pop();\n}",
+      "code": "import java.util.Stack;\n\npublic class ParenthesesChecker {\n    public static boolean isBalanced(String expression) {\n        // Input: String 'expression'\n        \n        // Storage: Stack to store opening characters\n        Stack<Character> stack = new Stack<>();\n        \n        // Process: Scan expression char by char\n        for (int i = 0; i < expression.length(); i++) {\n            char ch = expression.charAt(i);\n            \n            if (ch == '(' || ch == '{' || ch == '[') {\n                stack.push(ch);\n            } else if (ch == ')' || ch == '}' || ch == ']') {\n                if (stack.isEmpty()) return false;\n                \n                char top = stack.pop();\n                if ((ch == ')' && top != '(') ||\n                    (ch == '}' && top != '{') ||\n                    (ch == ']' && top != '[')) {\n                    return false; // Mismatched boundary\n                }\n            }\n        }\n        \n        // Output: True if stack is completely matched and empty\n        return stack.isEmpty();\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 4, "end": 4, "desc": "Receives string equation as argument." },
+        { "type": "storage", "start": 8, "end": 8, "desc": "Allocates Stack of Characters to keep track of un-matched opening brackets." },
+        { "type": "storage", "start": 12, "end": 12, "desc": "Declares ch variable in memory to hold current character scan." },
+        { "type": "storage", "start": 19, "end": 19, "desc": "Declares top variable to hold popped bracket character." },
+        { "type": "process", "start": 11, "end": 26, "desc": "Iterates through string. Pushes open brackets. For closed brackets, pops matching open brackets from stack and verifies correct match." },
+        { "type": "output", "start": 17, "end": 17, "desc": "Returns false immediately if a closing bracket is found without an opening counterpart." },
+        { "type": "output", "start": 23, "end": 23, "desc": "Returns false if popped open bracket doesn't match current closed bracket type." },
+        { "type": "output", "start": 29, "end": 29, "desc": "Returns whether stack is empty (all brackets successfully paired)." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the state of the stack after processing '[(]'?",
+          "o": ["Empty", "Contains '['", "Contains '('", "Contains '[' and '('"],
+          "a": 3
+        }
+      ]
+    },
+    {
+      "id": "postfix_eval",
+      "title": "5.3 Evaluation of Postfix Expression",
+      "description": "Evaluate postfix expressions using a stack. Push operands, and when an operator is encountered, pop operands, apply the operator, and push the result.",
+      "complexity": { "time": "O(n)", "space": "O(n) operands stack" },
+      "cheatSheet": "for(char c : expr.toCharArray()) {\n  if(Character.isDigit(c)) s.push(c - '0');\n  else { int val1 = s.pop(), val2 = s.pop(); s.push(eval(val2, val1, c)); }\n}",
+      "code": "import java.util.Stack;\n\npublic class PostfixEvaluator {\n    public static int evaluate(String expr) {\n        // Input: String postfix expression\n        \n        // Storage: Operand stack\n        Stack<Integer> stack = new Stack<>();\n        \n        // Process: Read token-by-token\n        for (int i = 0; i < expr.length(); i++) {\n            char c = expr.charAt(i);\n            if (c == ' ') continue;\n            \n            if (Character.isDigit(c)) {\n                stack.push(c - '0'); // Storage value push\n            } else {\n                int val1 = stack.pop(); // Storage\n                int val2 = stack.pop(); // Storage\n                \n                switch (c) {\n                    case '+': stack.push(val2 + val1); break;\n                    case '-': stack.push(val2 - val1); break;\n                    case '*': stack.push(val2 * val1); break;\n                    case '/': stack.push(val2 / val1); break;\n                }\n            }\n        }\n        // Output: final calculated value\n        return stack.pop();\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 4, "end": 4, "desc": "Accepts postfix expression string." },
+        { "type": "storage", "start": 8, "end": 8, "desc": "Creates Stack of integers to hold operand numbers." },
+        { "type": "storage", "start": 18, "end": 19, "desc": "Allocates local variables val1 and val2 to hold the popped operands." },
+        { "type": "process", "start": 11, "end": 28, "desc": "Loops through tokens. If number, pushes it. If operator, pops two values, applies operation and pushes result." },
+        { "type": "output", "start": 30, "end": 30, "desc": "Pops and returns the final evaluated result." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the result of evaluating the postfix expression '2 3 1 * + 9 -'?",
+          "o": ["-4", "4", "5", "-5"],
+          "a": 0
+        }
+      ]
+    },
+    {
+      "id": "infix_to_postfix",
+      "title": "5.4 Infix to Postfix Conversion",
+      "description": "Convert infix math expressions (e.g. A + B * C) to postfix notation (e.g. A B C * +) using a stack to buffer operators based on precedence.",
+      "complexity": { "time": "O(n)", "space": "O(n) operators stack" },
+      "cheatSheet": "Precedence: +,- is 1; *,/ is 2; ^ is 3.\nPop operators of higher/equal precedence from stack to output before pushing current operator.",
+      "code": "import java.util.Stack;\n\npublic class InfixToPostfix {\n    private static int prec(char ch) {\n        switch (ch) {\n            case '+': case '-': return 1;\n            case '*': case '/': return 2;\n            case '^': return 3;\n        }\n        return -1;\n    }\n    \n    public static String convert(String expr) {\n        // Input: Infix expression string\n        StringBuilder result = new StringBuilder(); // Storage\n        Stack<Character> stack = new Stack<>();     // Storage\n        \n        // Process: Operator precedence checking loops\n        for (int i = 0; i < expr.length(); ++i) {\n            char c = expr.charAt(i);\n            \n            if (Character.isLetterOrDigit(c)) {\n                result.append(c);\n            } else if (c == '(') {\n                stack.push(c);\n            } else if (c == ')') {\n                while (!stack.isEmpty() && stack.peek() != '(') {\n                    result.append(stack.pop());\n                }\n                stack.pop();\n            } else {\n                while (!stack.isEmpty() && prec(c) <= prec(stack.peek())) {\n                    result.append(stack.pop());\n                }\n                stack.push(c);\n            }\n        }\n        \n        while (!stack.isEmpty()) {\n            result.append(stack.pop());\n        }\n        // Output: Postfix string\n        return result.toString();\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 13, "end": 13, "desc": "Accepts infix equation as a string." },
+        { "type": "storage", "start": 15, "end": 16, "desc": "Allocates StringBuilder output buffer and operator Character Stack." },
+        { "type": "process", "start": 19, "end": 41, "desc": "Iterates through infix tokens, matching brackets, comparing operator precedence levels, and pushing/popping operators appropriately." },
+        { "type": "output", "start": 43, "end": 43, "desc": "Returns compiled postfix string." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the postfix representation of 'A + B * C + D'?",
+          "o": ["A B C * + D +", "A B + C * D +", "A B C * D + +", "A B C + * D +"],
+          "a": 0
+        }
+      ]
+    },
+    {
+      "id": "reverse_stack",
+      "title": "5.5 Reverse a Stack using Recursion",
+      "description": "Reverse stack elements using recursion call stack without allocating any auxiliary data structures.",
+      "complexity": { "time": "O(n^2)", "space": "O(n) recursive stack calls" },
+      "cheatSheet": "void reverse(Stack<Integer> s) {\n  if(s.isEmpty()) return;\n  int x = s.pop(); reverse(s);\n  insertAtBottom(s, x);\n}",
+      "code": "import java.util.Stack;\n\npublic class StackReverser {\n    public static void reverse(Stack<Integer> stack) {\n        // Input: Stack to reverse in-place\n        \n        // Process: Pop elements recursively\n        if (stack.isEmpty()) return;\n        \n        int temp = stack.pop(); // Storage: call stack\n        reverse(stack);\n        \n        // Process: Insert popped element at bottom\n        insertAtBottom(stack, temp);\n    }\n    \n    private static void insertAtBottom(Stack<Integer> stack, int x) {\n        if (stack.isEmpty()) {\n            stack.push(x);\n        } else {\n            int temp = stack.pop(); // Storage\n            insertAtBottom(stack, x);\n            stack.push(temp);\n        }\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 4, "end": 4, "desc": "Receives target stack." },
+        { "type": "storage", "start": 10, "end": 10, "desc": "Stores current popped value 'temp' in the recursion call stack frame memory." },
+        { "type": "storage", "start": 21, "end": 21, "desc": "Stores temp value during the insertAtBottom recursion cycle." },
+        { "type": "process", "start": 8, "end": 14, "desc": "Recursive unwinding. Pops elements to clear the stack, then triggers insertAtBottom to rebuild LIFO in reverse." },
+        { "type": "process", "start": 18, "end": 24, "desc": "Recursive bottom insertion. Pops elements until empty to insert x at base, then pushes items back on top." }
+      ],
+      "quiz": [
+        {
+          "q": "What mechanism is used to store elements during stack reversal when no auxiliary data structure is allocated?",
+          "o": ["Array storage", "Recursion Call Stack frames", "System files", "CPU cache directly"],
+          "a": 1
+        }
+      ]
+    }
+  ]
+}

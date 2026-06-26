@@ -1,0 +1,141 @@
+{
+  "id": "unit_13",
+  "title": "Unit 13: Minimum Spanning Tree (MST)",
+  "description": "Find the subset of edges in a weighted graph that connects all vertices with the minimum possible total edge weight.",
+  "topics": [
+    {
+      "id": "kruskal_algo",
+      "title": "13.1 Kruskal's Algorithm",
+      "description": "Sort all edges in increasing order of weight. Pick edges one by one, adding them to the MST if they do not create a cycle (using Union-Find).",
+      "complexity": { "time": "O(E log E) or O(E log V) for edge sorting", "space": "O(V) for disjoint set" },
+      "cheatSheet": "// Sort edges by weight\nArrays.sort(edges);\n// Union-Find (Disjoint Set Union)\nfor(Edge e : edges) {\n  if(find(e.u) != find(e.v)) {\n    union(e.u, e.v);\n    mst.add(e);\n  }\n}",
+      "code": "import java.util.Arrays;\n\npublic class KruskalMST {\n    // Storage: Edge structure representation\n    public static class Edge implements Comparable<Edge> {\n        int src, dest, weight;\n        public int compareTo(Edge other) {\n            return this.weight - other.weight; // Process sorting metric\n        } \n    }\n\n    // Process: Kruskal's algorithm\n    public static void findMST(Edge[] edges, int verticesCount) {\n        // Process: Sort edges in ascending order of weights\n        Arrays.sort(edges);\n        \n        // Storage: Disjoint Set parent array\n        int[] parent = new int[verticesCount];\n        for (int i = 0; i < verticesCount; i++) parent[i] = i;\n        \n        int mstEdges = 0;\n        int mstWeight = 0;\n        \n        for (Edge edge : edges) {\n            int rootSrc = findParent(edge.src, parent);\n            int rootDest = findParent(edge.dest, parent);\n            \n            // Process: Union-find check to prevent cycles\n            if (rootSrc != rootDest) {\n                System.out.println(\"Edge in MST: \" + edge.src + \" -- \" + edge.dest + \" == \" + edge.weight); // Output\n                mstWeight += edge.weight;\n                parent[rootSrc] = rootDest; // Union\n                mstEdges++;\n                if (mstEdges == verticesCount - 1) break;\n            }\n        }\n    }\n\n    private static int findParent(int node, int[] parent) {\n        if (parent[node] == node) return node;\n        return parent[node] = findParent(parent[node], parent); // Path compression\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 13, "end": 13, "desc": "Receives edge array list and verticesCount count." },
+        { "type": "storage", "start": 5, "end": 10, "desc": "Defines class representation Edge, which stores source, destination, and weights in memory." },
+        { "type": "storage", "start": 18, "end": 19, "desc": "Initializes disjoint set parent array, storing self references for all vertices." },
+        { "type": "storage", "start": 21, "end": 22, "desc": "Allocates mstEdges count and mstWeight sum trackers in memory." },
+        { "type": "storage", "start": 25, "end": 26, "desc": "Allocates rootSrc and rootDest pointers to hold disjoint set representatives." },
+        { "type": "process", "start": 15, "end": 15, "desc": "Sorts edges array in O(E log E) based on edge weights." },
+        { "type": "process", "start": 24, "end": 36, "desc": "Iterates through edges. Performs Union-Find checks to prevent cycles and joins sets if safe." },
+        { "type": "process", "start": 39, "end": 42, "desc": "Performs recursive Disjoint Set parent lookup with path compression." },
+        { "type": "output", "start": 30, "end": 30, "desc": "Outputs the selected MST edge coordinates and corresponding weights directly." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the role of the Union-Find (Disjoint Set) data structure in Kruskal's algorithm?",
+          "o": ["To sort the edge weights", "To traverse the graph in BFS order", "To check if adding an edge will form a cycle in O(1) amortized time", "To store adjacency lists"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "prim_algo",
+      "title": "13.2 Prim's Algorithm",
+      "description": "Start with a single node, and repeatedly add the minimum weight edge that connects a node in the tree to a node outside the tree. Uses a min-priority queue.",
+      "complexity": { "time": "O(V^2) or O(E log V) with PriorityQueue", "space": "O(V)" },
+      "cheatSheet": "Initialize: key[] = infinity, mstSet[] = false. key[0] = 0.\nLoop V times. Pick minimum key vertex u not in mstSet. Add u to mstSet. Update keys of adj vertices.",
+      "code": "import java.util.Arrays;\n\npublic class PrimMST {\n    public static void findMST(int[][] graph, int V) {\n        // Input: adjacency matrix graph and vertices count V\n        \n        // Storage: parent, key, and MST state\n        int[] parent = new int[V];\n        int[] key = new int[V];\n        boolean[] mstSet = new boolean[V];\n        \n        Arrays.fill(key, Integer.MAX_VALUE);\n        key[0] = 0; // Source vertex key is 0\n        parent[0] = -1;\n        \n        // Process: find MST edges\n        for (int count = 0; count < V - 1; count++) {\n            int u = minKey(key, mstSet, V); // Storage: active vertex\n            mstSet[u] = true;\n            \n            // Update key values of adjacent vertices\n            for (int v = 0; v < V; v++) {\n                if (graph[u][v] != 0 && !mstSet[v] && graph[u][v] < key[v]) {\n                    parent[v] = u;\n                    key[v] = graph[u][v];\n                }\n            }\n        }\n        \n        // Output: print MST edges\n        for (int i = 1; i < V; i++) {\n            System.out.println(parent[i] + \" - \" + i + \"\\t\" + graph[i][parent[i]]);\n        }\n    }\n    \n    private static int minKey(int[] key, boolean[] mstSet, int V) {\n        int min = Integer.MAX_VALUE, min_index = -1;\n        for (int v = 0; v < V; v++) {\n            if (!mstSet[v] && key[v] < min) {\n                min = key[v];\n                min_index = v;\n            }\n        }\n        return min_index;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 4, "end": 4, "desc": "Accepts adjacency matrix graph representation and vertex count V." },
+        { "type": "storage", "start": 8, "end": 10, "desc": "Allocates parent nodes array, key array weights, and mstSet membership boolean array." },
+        { "type": "storage", "start": 18, "end": 18, "desc": "Declares u node pointer to hold vertex of minimum key weight outside MST." },
+        { "type": "process", "start": 17, "end": 28, "desc": "Iterates V-1 times. Chooses minimum key node u, sets its visited state, and updates keys of neighboring vertices." },
+        { "type": "output", "start": 31, "end": 33, "desc": "Prints parent-child connections and edge weights of computed MST." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the initial key value assigned to all vertices (except source) in Prim's algorithm?",
+          "o": ["0", "-1", "Infinity (Integer.MAX_VALUE)", "1"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "spanning_trees_count",
+      "title": "13.3 Total Number of Spanning Trees",
+      "description": "Calculate total spanning trees of a graph. For complete graphs, use Cayley's formula: V^(V-2). For general graphs, compute the determinant of the Laplacian matrix (Kirchhoff's Matrix Tree Theorem).",
+      "complexity": { "time": "O(V^3) for matrix determinant", "space": "O(V^2)" },
+      "cheatSheet": "Kirchhoff Theorem:\n1. Construct Laplacian L = Degree - Adjacency.\n2. Delete row 1 and column 1.\n3. Compute determinant of co-factor matrix.",
+      "code": "public class SpanningTreeCount {\n    public static double countCompleteMST(int V) {\n        // Input: vertices count V\n        \n        // Process: Cayley's formula V^(V-2)\n        double count = Math.pow(V, V - 2); // Storage\n        \n        // Output: return count\n        return count;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Takes number of vertices V." },
+        { "type": "storage", "start": 6, "end": 6, "desc": "Declares count variable to hold computed power math result." },
+        { "type": "process", "start": 6, "end": 6, "desc": "Applies Cayley's theorem formula for complete graphs: V to the power of V - 2." },
+        { "type": "output", "start": 9, "end": 9, "desc": "Returns total spanning trees count." }
+      ],
+      "quiz": [
+        {
+          "q": "How many spanning trees exist for a complete graph of 4 vertices?",
+          "o": ["4", "16", "8", "12"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "min_product_mst",
+      "title": "13.4 Minimum Product Spanning Tree",
+      "description": "Find a spanning tree such that the product of edge weights is minimized. Can be solved by replacing edge weights w with log(w) and running standard MST algorithms (Kruskal/Prim) to minimize the sum of log weights.",
+      "complexity": { "time": "O(E log E) or O(E log V)", "space": "O(V)" },
+      "cheatSheet": "log(w1 * w2 * ... * wN) = log(w1) + log(w2) + ... + log(wN).\nReplace edge.weight = Math.log(edge.weight) and run Kruskal's algorithm.",
+      "code": "public class MinProductMST {\n    public static void compute(KruskalMST.Edge[] edges, int V) {\n        // Input: Edge list with weights and vertices V\n        \n        // Process: Transform weights to logarithms\n        for (KruskalMST.Edge edge : edges) {\n            edge.weight = (int) Math.log(edge.weight); // Storage updates\n        }\n        \n        // Process & Output: Run standard Kruskal's algorithm\n        KruskalMST.findMST(edges, V);\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts edges array and vertex count V." },
+        { "type": "process", "start": 6, "end": 8, "desc": "Transforms edge weight properties in-place by computing their natural logarithms." },
+        { "type": "process", "start": 11, "end": 11, "desc": "Invokes standard Kruskal's MST algorithm on log-transformed weights." }
+      ],
+      "quiz": [
+        {
+          "q": "What mathematical identity allows standard sum-minimizing MST algorithms to minimize products?",
+          "o": ["log(ab) = log(a) + log(b)", "log(a+b) = log(a) * log(b)", "a^b = b^a", "e^(a+b) = e^a + e^b"],
+          "a": 0
+        }
+      ]
+    },
+    {
+      "id": "reverse_delete_mst",
+      "title": "13.5 Reverse Delete Algorithm for MST",
+      "description": "Start with the full graph. Sort edges in descending order of weight. Iterate through edges, deleting them unless doing so disconnects the graph (tested using BFS/DFS).",
+      "complexity": { "time": "O(E log V + E^2)", "space": "O(V + E)" },
+      "cheatSheet": "Sort edges descending.\nFor each edge: Delete from graph. Run DFS from source. If visited count < V, add edge back.",
+      "code": "import java.util.ArrayList;\nimport java.util.Collections;\n\npublic class ReverseDeleteMST {\n    public static void findMST(KruskalMST.Edge[] edges, int V, ArrayList<ArrayList<Integer>> adj) {\n        // Input: edges, vertices count, and adjacency list graph\n        \n        // Process: Sort edges in descending order of weights\n        // (Assuming custom sort descending)\n        \n        for (int i = edges.length - 1; i >= 0; i--) {\n            KruskalMST.Edge edge = edges[i]; // Storage\n            \n            // Process: Temporarily remove edge from graph\n            removeEdge(adj, edge.src, edge.dest);\n            \n            // Check if graph is still connected\n            boolean[] visited = new boolean[V]; // Storage\n            dfs(0, adj, visited);\n            \n            int count = 0; // Storage\n            for (boolean v : visited) if (v) count++;\n            \n            if (count < V) {\n                // Re-connect since deletion disconnected graph\n                addEdge(adj, edge.src, edge.dest);\n                System.out.println(\"Edge in MST: \" + edge.src + \" - \" + edge.dest); // Output\n            }\n        }\n    }\n    \n    private static void dfs(int u, ArrayList<ArrayList<Integer>> adj, boolean[] visited) {\n        visited[u] = true;\n        for (int v : adj.get(u)) {\n            if (!visited[v]) dfs(v, adj, visited);\n        }\n    }\n    private static void removeEdge(ArrayList<ArrayList<Integer>> adj, int u, int v) { /* ... */ }\n    private static void addEdge(ArrayList<ArrayList<Integer>> adj, int u, int v) { /* ... */ }\n}",
+      "ispo": [
+        { "type": "input", "start": 5, "end": 5, "desc": "Accepts edges array, vertex count V, and adjacency list graph representation." },
+        { "type": "storage", "start": 12, "end": 12, "desc": "Stores current edge reference." },
+        { "type": "storage", "start": 18, "end": 21, "desc": "Allocates visited tracker array and connection count accumulator." },
+        { "type": "process", "start": 11, "end": 29, "desc": "Iterates backwards. Disconnects edge, runs DFS to measure connectivity count, and restores edge if count < V." },
+        { "type": "output", "start": 27, "end": 27, "desc": "Prints edges that are retained in the final MST." }
+      ],
+      "quiz": [
+        {
+          "q": "In which order does the Reverse Delete algorithm inspect graph edges?",
+          "o": ["Ascending order of weights", "Descending order of weights", "Random order", "Breadth First search order"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "cycle_detection_directed",
+      "title": "13.6 Cycle Detection in Directed Graph",
+      "description": "Detect cycles in a directed graph using DFS. Keep track of visited nodes and nodes in the current recursion stack (to identify back edges).",
+      "complexity": { "time": "O(V + E)", "space": "O(V) for arrays and call stack" },
+      "cheatSheet": "Keep two boolean arrays: visited[] and recStack[].\nIf neighbor is already in recStack, cycle detected (found a back edge).",
+      "code": "import java.util.ArrayList;\n\npublic class DirectedCycleDetector {\n    public static boolean hasCycle(int V, ArrayList<ArrayList<Integer>> adj) {\n        // Input: vertices V and Adjacency list adj\n        \n        // Storage: Visited and Recursion Stack trackers\n        boolean[] visited = new boolean[V];\n        boolean[] recStack = new boolean[V];\n        \n        // Process: Loop all vertices to handle disjoint segments\n        for (int i = 0; i < V; i++) {\n            if (dfs(i, adj, visited, recStack)) {\n                return true; // Output: Cycle found\n            }\n        }\n        return false; // Output: Safe\n    }\n    \n    private static boolean dfs(int u, ArrayList<ArrayList<Integer>> adj, boolean[] visited, boolean[] recStack) {\n        if (recStack[u]) return true; // Found back-edge!\n        if (visited[u]) return false;\n        \n        visited[u] = true;\n        recStack[u] = true;\n        \n        for (int v : adj.get(u)) {\n            if (dfs(v, adj, visited, recStack)) return true;\n        }\n        \n        recStack[u] = false; // backtrack\n        return false;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 4, "end": 4, "desc": "Accepts vertices count V and graph representation adj." },
+        { "type": "storage", "start": 8, "end": 9, "desc": "Allocates visited and recStack boolean tracking arrays." },
+        { "type": "process", "start": 12, "end": 16, "desc": "Iterates. Starts DFS recursive check from each unvisited vertex, checking recursion stack intersections." },
+        { "type": "process", "start": 21, "end": 32, "desc": "DFS logic. Sets recStack flag to true, recurses for neighbors, and resets recStack flag to false on backtrack." },
+        { "type": "output", "start": 14, "end": 14, "desc": "Returns true immediately if cycle is detected." },
+        { "type": "output", "start": 17, "end": 17, "desc": "Returns false if all vertices verified cycle-free." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the purpose of the 'recStack' (recursion stack) array in directed graph cycle detection?",
+          "o": ["To store output paths", "To identify 'back edges' pointing to ancestors currently active in the recursive call path", "To count edges", "To perform binary search"],
+          "a": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "id": "unit_8",
+  "title": "Unit 8: Doubly & Circular Linked Lists",
+  "description": "Work with advanced linked list patterns where nodes point backward or loop in a circle.",
+  "topics": [
+    {
+      "id": "circular_ll",
+      "title": "8.1 Circular Linked List operations",
+      "description": "A Circular Linked List (CLL) is a sequence of nodes where the last node points back to the first node (head). Traversal requires stopping when returning to head.",
+      "complexity": { "time": "O(1) insertion at head/tail with tail pointer, O(n) traversal", "space": "O(n)" },
+      "cheatSheet": "// Traversal:\nNode temp = head;\nif(head != null) {\n  do {\n    System.out.print(temp.val);\n    temp = temp.next;\n  } while (temp != head);\n}",
+      "code": "public class CircularLinkedList {\n    public static class Node {\n        int val;\n        Node next;\n        Node(int v) { val = v; }\n    }\n    \n    // Storage: Head pointer\n    private Node head = null;\n    \n    // Process & Storage: Insert at beginning\n    public void insert(int val) {\n        Node newNode = new Node(val); // Storage\n        if (head == null) {\n            head = newNode;\n            newNode.next = head;\n            return;\n        }\n        \n        // Process: Find last node pointing to head\n        Node temp = head; // Storage\n        while (temp.next != head) {\n            temp = temp.next;\n        }\n        temp.next = newNode;\n        newNode.next = head;\n        head = newNode; // Output\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 12, "end": 12, "desc": "Accepts value to insert." },
+        { "type": "storage", "start": 2, "end": 6, "desc": "Defines Node class structure." },
+        { "type": "storage", "start": 9, "end": 9, "desc": "Declares head node reference." },
+        { "type": "storage", "start": 13, "end": 13, "desc": "Allocates a new Node object." },
+        { "type": "storage", "start": 21, "end": 21, "desc": "Declares temp variable to walk list." },
+        { "type": "process", "start": 14, "end": 18, "desc": "Handles inserting first element pointing to itself." },
+        { "type": "process", "start": 22, "end": 26, "desc": "Finds last node and updates pointers to insert newNode at start, wrapping around." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the stopping condition when traversing a Circular Linked List to print elements?",
+          "o": ["current == null", "current.next == null", "current == head (after visiting at least once)", "current.val == -1"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "doubly_ll",
+      "title": "8.2 Doubly Linked List Node Structure",
+      "description": "Doubly Linked List (DLL) nodes contain previous and next pointers, allowing bidirectional traversal.",
+      "complexity": { "time": "O(1) insertion/deletion at endpoints", "space": "O(n)" },
+      "cheatSheet": "class DLLNode {\n  int data;\n  DLLNode prev, next;\n  DLLNode(int d) { data = d; }\n}",
+      "code": "public class DoublyLinkedList {\n    // Storage: DLL Node structure\n    public static class DLLNode { \n        public int data;\n        public DLLNode prev;\n        public DLLNode next;\n        \n        public DLLNode(int data) {\n            this.data = data;\n        }\n    }\n    \n    private DLLNode head = null;\n    \n    // Process & Storage: Insert at front\n    public void insertFirst(int val) {\n        DLLNode newNode = new DLLNode(val);\n        if (head != null) {\n            head.prev = newNode;\n        }\n        newNode.next = head;\n        head = newNode;\n    } \n}",
+      "ispo": [
+        { "type": "input", "start": 16, "end": 16, "desc": "Receives value to insert at front." },
+        { "type": "storage", "start": 3, "end": 11, "desc": "Declares DLLNode class variables data, prev, and next to represent DLL nodes in memory." },
+        { "type": "storage", "start": 13, "end": 13, "desc": "Declares head node pointer." },
+        { "type": "storage", "start": 17, "end": 17, "desc": "Allocates memory for a new DLLNode object." },
+        { "type": "process", "start": 17, "end": 22, "desc": "Creates a new DLLNode, updates head.prev, sets next to head, and shifts head reference." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the main advantage of a Doubly Linked List over a Singly Linked List?",
+          "o": ["Requires less memory", "Permits backward traversal and O(1) deletes given a node pointer", "It is sorted automatically", "Runs faster for searching"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "sorted_merge_circular",
+      "title": "8.3 Sorted Merge of Two Doubly Circular Lists",
+      "description": "Merge two sorted doubly circular linked lists into a single sorted doubly circular linked list.",
+      "complexity": { "time": "O(n1 + n2)", "space": "O(1)" },
+      "cheatSheet": "Compare head values. Merge rest recursively. Set prev pointers. Link ends to form circle.",
+      "code": "public class MergeSortedCircularDLL {\n    public static DoublyLinkedList.DLLNode merge(DoublyLinkedList.DLLNode head1, DoublyLinkedList.DLLNode head2) {\n        // Input: two DLL heads\n        if (head1 == null) return head2;\n        if (head2 == null) return head1;\n        \n        // Process: break circular links temporarily to merge as linear\n        DoublyLinkedList.DLLNode last1 = head1.prev; // Storage\n        DoublyLinkedList.DLLNode last2 = head2.prev; // Storage\n        last1.next = null; head1.prev = null;\n        last2.next = null; head2.prev = null;\n        \n        DoublyLinkedList.DLLNode mergedHead = mergeLinear(head1, head2); // Storage\n        \n        // Process: find last node of merged list to restore circle\n        DoublyLinkedList.DLLNode curr = mergedHead; // Storage\n        while (curr.next != null) {\n            curr = curr.next;\n        }\n        \n        curr.next = mergedHead;\n        mergedHead.prev = curr;\n        \n        // Output: return merged circular head\n        return mergedHead;\n    }\n    \n    private static DoublyLinkedList.DLLNode mergeLinear(DoublyLinkedList.DLLNode a, DoublyLinkedList.DLLNode b) {\n        if (a == null) return b;\n        if (b == null) return a;\n        \n        if (a.data <= b.data) {\n            a.next = mergeLinear(a.next, b);\n            a.next.prev = a;\n            return a;\n        } else {\n            b.next = mergeLinear(a, b.next);\n            b.next.prev = b;\n            return b;\n        }\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts head1 and head2 of both circular doubly lists." },
+        { "type": "storage", "start": 7, "end": 8, "desc": "Saves references to the last elements of both circular lists to break circle links." },
+        { "type": "storage", "start": 12, "end": 12, "desc": "Declares mergedHead reference variable to hold sorted linear merge result." },
+        { "type": "storage", "start": 15, "end": 15, "desc": "Declares current node pointer to traverse and locate end of list." },
+        { "type": "process", "start": 9, "end": 10, "desc": "Breaks circles of both lists by setting last node next to null and head prev to null." },
+        { "type": "process", "start": 16, "end": 21, "desc": "Locates the end of the merged list and links the last node back to head to restore circular properties." },
+        { "type": "output", "start": 24, "end": 24, "desc": "Returns sorted merged circular doubly head." }
+      ],
+      "quiz": [
+        {
+          "q": "Why is it helpful to break the circular connections temporarily before merging sorted circular DLLs?",
+          "o": ["To save memory", "To simplify the sorting merge logic by treating them as standard linear lists", "To reverse elements", "It is not helpful"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "delete_all_occurrences",
+      "title": "8.4 Delete occurrences of Key in DLL",
+      "description": "Delete all nodes in a doubly linked list that contain a target key x.",
+      "complexity": { "time": "O(n)", "space": "O(1)" },
+      "cheatSheet": "while(curr != null) {\n  if(curr.data == x) {\n    if(curr.prev != null) curr.prev.next = curr.next;\n    if(curr.next != null) curr.next.prev = curr.prev;\n  }\n}",
+      "code": "public class DeleteAllKeyDLL {\n    public static DoublyLinkedList.DLLNode deleteAll(DoublyLinkedList.DLLNode head, int x) {\n        // Input: head and target value x\n        if (head == null) return null;\n        \n        DoublyLinkedList.DLLNode current = head; // Storage\n        \n        // Process: traverse and delete nodes matching x\n        while (current != null) {\n            if (current.data == x) {\n                DoublyLinkedList.DLLNode nextNode = current.next; // Storage\n                \n                // Handle head deletion\n                if (current == head) {\n                    head = current.next;\n                    if (head != null) head.prev = null;\n                } else {\n                    // Adjust pointers to bypass current\n                    if (current.prev != null) current.prev.next = current.next;\n                    if (current.next != null) current.next.prev = current.prev;\n                }\n                current = nextNode;\n            } else {\n                current = current.next;\n            }\n        }\n        // Output: return updated head reference\n        return head;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Takes DLL head and key x to remove." },
+        { "type": "storage", "start": 6, "end": 6, "desc": "Declares current pointer initialized to head." },
+        { "type": "storage", "start": 11, "end": 11, "desc": "Stores current's next node in nextNode prior to bypass." },
+        { "type": "process", "start": 9, "end": 25, "desc": "Traverses DLL. If node value matches key x, rewrites neighboring nodes next/prev links to bypass and delete." },
+        { "type": "output", "start": 28, "end": 28, "desc": "Returns updated head pointer." }
+      ],
+      "quiz": [
+        {
+          "q": "What happens to pointers of neighbors when a node is deleted in a Doubly Linked List?",
+          "o": ["Only previous node's next pointer changes", "Only next node's prev pointer changes", "Both previous node's next pointer and next node's prev pointer are adjusted to bypass it", "No pointers change"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "delete_node_at_position",
+      "title": "8.5 Delete Node at Position in DLL",
+      "description": "Delete a node located at a specific index position n (1-indexed) in a doubly linked list.",
+      "complexity": { "time": "O(pos) traversal", "space": "O(1)" },
+      "cheatSheet": "Move to pos. Link: curr.prev.next = curr.next; curr.next.prev = curr.prev;",
+      "code": "public class DeletePosDLL {\n    public static DoublyLinkedList.DLLNode deleteAtPosition(DoublyLinkedList.DLLNode head, int position) {\n        // Input: head pointer and index position\n        if (head == null || position < 1) return head;\n        \n        DoublyLinkedList.DLLNode current = head; // Storage\n        \n        // Process: traverse to target position\n        for (int i = 1; current != null && i < position; i++) {\n            current = current.next;\n        }\n        \n        if (current == null) return head; // Position out of bounds\n        \n        // Process: handles head deletion\n        if (current == head) {\n            head = current.next;\n            if (head != null) head.prev = null;\n            return head; // Output\n        }\n        \n        // Process: bypass current node in list\n        if (current.next != null) {\n            current.next.prev = current.prev;\n        }\n        if (current.prev != null) {\n            current.prev.next = current.next;\n        }\n        \n        // Output: return updated head\n        return head;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts head node and 1-indexed target position to delete." },
+        { "type": "storage", "start": 6, "end": 6, "desc": "Declares current pointer walking variable." },
+        { "type": "process", "start": 9, "end": 11, "desc": "Iterates until reaching the node at the specified position." },
+        { "type": "process", "start": 16, "end": 20, "desc": "Deletes head if position is 1, updating head.prev and returning." },
+        { "type": "process", "start": 23, "end": 28, "desc": "Updates next/prev pointers of node's neighbors to bypass the node in memory." },
+        { "type": "output", "start": 31, "end": 31, "desc": "Returns updated head pointer." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the index of the first node when deleting at position in a standard 1-indexed function?",
+          "o": ["0", "1", "2", "-1"],
+          "a": 1
+        }
+      ]
+    }
+  ]
+}

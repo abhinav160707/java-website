@@ -1,0 +1,166 @@
+{
+  "id": "unit_7",
+  "title": "Unit 7: Singly Linked List",
+  "description": "Learn how to build dynamic lists of nodes connected by pointers and solve core interview tasks.",
+  "topics": [
+    {
+      "id": "singly_ll_op",
+      "title": "7.1 Singly Linked List Basic Operations",
+      "description": "Creating a node class, traversal, insertion, and deletion. Nodes store data and references to next elements.",
+      "complexity": { "time": "O(1) head operations, O(n) traversal/arbitrary position", "space": "O(n)" },
+      "cheatSheet": "class Node { int val; Node next; Node(int v){val=v;} }\n// Insertion at head:\nNode newHead = new Node(val); newHead.next = head; head = newHead;",
+      "code": "public class SinglyLinkedList {\n    // Storage: Structure of nodes\n    public static class Node {\n        public int val;\n        public Node next;\n        public Node(int val) { this.val = val; }\n    }\n    \n    private Node head = null;\n\n    // Process & Storage: Insert at beginning\n    public void insertAtHead(int value) {\n        Node newNode = new Node(value);\n        newNode.next = head;\n        head = newNode;\n    }\n\n    // Process: Print all nodes\n    public void traverse() {\n        Node current = head;\n        while (current != null) {\n            System.out.print(current.val + \" -> \"); // Output\n            current = current.next;\n        }\n        System.out.println(\"null\");\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 12, "end": 12, "desc": "Accepts integer value to append as a new list node." },
+        { "type": "storage", "start": 3, "end": 7, "desc": "Defines class representation Node containing value and pointer next in memory." },
+        { "type": "storage", "start": 9, "end": 9, "desc": "Stores head reference variable pointing to the first node of list." },
+        { "type": "storage", "start": 13, "end": 13, "desc": "Creates new Node object in memory to hold the value." },
+        { "type": "storage", "start": 20, "end": 20, "desc": "Declares current node reference to traverse the list." },
+        { "type": "process", "start": 13, "end": 15, "desc": "Hooks newNode.next pointer to existing head, then updates head to point to newNode." },
+        { "type": "process", "start": 21, "end": 24, "desc": "Iterates through the linked list, following the next reference until null is reached." },
+        { "type": "output", "start": 22, "end": 22, "desc": "Prints the value of each node sequentially to standard output." },
+        { "type": "output", "start": 25, "end": 25, "desc": "Prints the null terminator at the end of traversal." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the time complexity of deleting a node directly after a given node in a Singly Linked List?",
+          "o": ["O(1)", "O(n)", "O(log n)", "O(n^2)"],
+          "a": 0
+        }
+      ]
+    },
+    {
+      "id": "linked_list_cycle",
+      "title": "7.2 Linked List Cycle",
+      "description": "Determine if a linked list contains a cycle using Floyd's Cycle Finding Algorithm (two-pointer technique with fast and slow pointers).",
+      "complexity": { "time": "O(n)", "space": "O(1)" },
+      "cheatSheet": "Node slow = head, fast = head;\nwhile(fast != null && fast.next != null) {\n  slow = slow.next; fast = fast.next.next;\n  if(slow == fast) return true;\n}\nreturn false;",
+      "code": "public class CycleDetector {\n    public static boolean hasCycle(SinglyLinkedList.Node head) {\n        // Input: Head node\n        if (head == null) return false;\n        \n        // Storage: Slow and fast pointers\n        SinglyLinkedList.Node slow = head;\n        SinglyLinkedList.Node fast = head;\n        \n        // Process: Floyd's tortoise and hare loops\n        while (fast != null && fast.next != null) {\n            slow = slow.next;          // Step 1\n            fast = fast.next.next;     // Step 2\n            \n            if (slow == fast) {\n                return true; // Output: Cycle detected\n            }\n        }\n        return false; // Output: No cycle\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts head reference node." },
+        { "type": "storage", "start": 7, "end": 8, "desc": "Allocates slow and fast pointer references in storage memory." },
+        { "type": "process", "start": 11, "end": 18, "desc": "Steps slow pointer by 1 node and fast pointer by 2 nodes. Checks if they intersect." },
+        { "type": "output", "start": 4, "end": 4, "desc": "Returns false if list is empty." },
+        { "type": "output", "start": 16, "end": 16, "desc": "Returns true when slow and fast meet, indicating a cycle loop exists." },
+        { "type": "output", "start": 19, "end": 19, "desc": "Returns false if fast pointer reaches end of list." }
+      ],
+      "quiz": [
+        {
+          "q": "Why does Floyd's Cycle Finding Algorithm use slow and fast pointers shifting at different speeds?",
+          "o": ["To sort nodes", "If a cycle exists, the fast pointer will eventually catch up and meet the slow pointer within the loop", "To count the list size", "To reverse links"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "remove_elements",
+      "title": "7.3 Remove Linked List Elements",
+      "description": "Remove all elements from a linked list that have a specific value. Handles head deletions using a dummy sentinel node.",
+      "complexity": { "time": "O(n)", "space": "O(1)" },
+      "cheatSheet": "Node dummy = new Node(0); dummy.next = head;\nNode curr = dummy;\nwhile(curr.next != null) {\n  if(curr.next.val == target) curr.next = curr.next.next;\n  else curr = curr.next;\n}\nreturn dummy.next;",
+      "code": "public class RemoveElements {\n    public static SinglyLinkedList.Node remove(SinglyLinkedList.Node head, int val) {\n        // Input: head node and target integer value\n        \n        // Storage: Sentinel node to simplify head removals\n        SinglyLinkedList.Node dummy = new SinglyLinkedList.Node(0);\n        dummy.next = head;\n        SinglyLinkedList.Node current = dummy;\n        \n        // Process: Traversal and link updates\n        while (current.next != null) {\n            if (current.next.val == val) {\n                current.next = current.next.next; // Bypass matched node\n            } else {\n                current = current.next; // Shift pointer\n            }\n        }\n        \n        // Output: Return new head node reference\n        return dummy.next;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Takes list head and value to delete." },
+        { "type": "storage", "start": 6, "end": 8, "desc": "Creates dummy sentinel node and current pointer to walk the list." },
+        { "type": "process", "start": 11, "end": 17, "desc": "Iterates. If the next node matches value, redirects next pointer to skip it; otherwise, moves current forward." },
+        { "type": "output", "start": 20, "end": 20, "desc": "Returns dummy.next (the new head node pointer)." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the primary benefit of utilizing a 'dummy' sentinel node in linked list deletions?",
+          "o": ["Speeds up traversal", "Prevents code duplication and simplifies handling deletion of the head node", "Compresses memory", "Sorts elements"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "reverse_ll",
+      "title": "7.4 Reverse Linked List",
+      "description": "Reverse a singly linked list in place by changing the direction of node pointers.",
+      "complexity": { "time": "O(n)", "space": "O(1) auxiliary" },
+      "cheatSheet": "Node prev = null, curr = head;\nwhile(curr != null) {\n  Node nextTemp = curr.next;\n  curr.next = prev;\n  prev = curr;\n  curr = nextTemp;\n}\nreturn prev;",
+      "code": "public class ReverseList {\n    public static SinglyLinkedList.Node reverse(SinglyLinkedList.Node head) {\n        // Input: Head pointer of list\n        \n        // Storage: Pointer variables\n        SinglyLinkedList.Node prev = null;\n        SinglyLinkedList.Node current = head;\n        \n        // Process: Pointer inversion loop\n        while (current != null) {\n            SinglyLinkedList.Node nextTemp = current.next; // Save next node\n            current.next = prev;        // Invert pointer\n            prev = current;             // Shift prev forward\n            current = nextTemp;         // Shift current forward\n        }\n        \n        // Output: Return new head of reversed list\n        return prev;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Receives head pointer of list." },
+        { "type": "storage", "start": 6, "end": 7, "desc": "Creates prev and current reference variables in storage memory to execute pointer redirection." },
+        { "type": "storage", "start": 11, "end": 11, "desc": "Allocates temporary pointer nextTemp to record the next node before pointer redirection." },
+        { "type": "process", "start": 10, "end": 15, "desc": "Saves next, flips current.next to point backward to prev, and slides prev and current forward." },
+        { "type": "output", "start": 18, "end": 18, "desc": "Returns prev, which is the head pointer of the inverted list." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the value of 'current.next' after a single pointer inversion step on current node?",
+          "o": ["The next node in original order", "The previous node ('prev')", "null", "The head of list"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "palindrome_ll",
+      "title": "7.5 Palindrome Linked List",
+      "description": "Determine if a singly linked list is a palindrome. Walk to middle (using fast/slow), reverse the second half, and compare values.",
+      "complexity": { "time": "O(n)", "space": "O(1)" },
+      "cheatSheet": "1. Find middle with slow/fast pointers.\n2. Reverse second half starting from middle.next.\n3. Compare first half values with reversed second half.",
+      "code": "public class PalindromeList {\n    public static boolean isPalindrome(SinglyLinkedList.Node head) {\n        // Input: Head node\n        if (head == null || head.next == null) return true;\n        \n        // Storage & Process: Find middle\n        SinglyLinkedList.Node slow = head;\n        SinglyLinkedList.Node fast = head;\n        while (fast.next != null && fast.next.next != null) {\n            slow = slow.next;\n            fast = fast.next.next;\n        }\n        \n        // Process: Reverse second half\n        SinglyLinkedList.Node secondHead = ReverseList.reverse(slow.next);\n        SinglyLinkedList.Node p1 = head;       // Storage\n        SinglyLinkedList.Node p2 = secondHead; // Storage\n        \n        // Process: Compare values\n        boolean palindrome = true; // Storage\n        while (p2 != null) {\n            if (p1.val != p2.val) {\n                palindrome = false;\n                break;\n            }\n            p1 = p1.next;\n            p2 = p2.next;\n        }\n        \n        // Output: Return outcome\n        return palindrome;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts head node parameter." },
+        { "type": "storage", "start": 7, "end": 8, "desc": "Declares slow and fast tracking pointers." },
+        { "type": "storage", "start": 15, "end": 17, "desc": "Allocates p1, p2, and secondHead references to compare halves." },
+        { "type": "storage", "start": 20, "end": 20, "desc": "Declares boolean indicator 'palindrome'." },
+        { "type": "process", "start": 9, "end": 12, "desc": "Walks slow pointer to middle of list." },
+        { "type": "process", "start": 15, "end": 15, "desc": "Invokes list reversal helper starting from middle node's next slot." },
+        { "type": "process", "start": 21, "end": 28, "desc": "Iterates and compares data values of first and second half nodes." },
+        { "type": "output", "start": 31, "end": 31, "desc": "Returns true/false palindrome outcome." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the optimal space complexity for checking if a linked list is a palindrome?",
+          "o": ["O(N)", "O(log N)", "O(1)", "O(N^2)"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "middle_ll",
+      "title": "7.6 Middle of the Linked List",
+      "description": "Find the middle node of a singly linked list. If there are two middle nodes, return the second middle node. Uses slow and fast pointers.",
+      "complexity": { "time": "O(n)", "space": "O(1)" },
+      "cheatSheet": "Node slow = head, fast = head;\nwhile(fast != null && fast.next != null) {\n  slow = slow.next; fast = fast.next.next;\n}\nreturn slow;",
+      "code": "public class MiddleNode {\n    public static SinglyLinkedList.Node getMiddle(SinglyLinkedList.Node head) {\n        // Input: Head pointer of list\n        \n        // Storage: Slow and fast pointers\n        SinglyLinkedList.Node slow = head;\n        SinglyLinkedList.Node fast = head;\n        \n        // Process: Two-pointer traversal\n        while (fast != null && fast.next != null) {\n            slow = slow.next;\n            fast = fast.next.next;\n        }\n        \n        // Output: Return middle node pointer\n        return slow;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Takes list head node." },
+        { "type": "storage", "start": 6, "end": 7, "desc": "Creates slow and fast reference indicators." },
+        { "type": "process", "start": 10, "end": 13, "desc": "Moves slow pointer by 1 step and fast pointer by 2 steps. When fast reaches end, slow is at the middle." },
+        { "type": "output", "start": 16, "end": 16, "desc": "Returns slow node pointer (middle)." }
+      ],
+      "quiz": [
+        {
+          "q": "For list 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> null, which node does getMiddle return?",
+          "o": ["Node 3", "Node 4", "Node 5", "null"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "binary_to_integer",
+      "title": "7.7 Convert Binary number in LL to Integer",
+      "description": "Given a singly linked list representing a binary number, convert it to its decimal integer value. Traverse left-to-right shifting values.",
+      "complexity": { "time": "O(n)", "space": "O(1)" },
+      "cheatSheet": "int num = 0;\nwhile(curr != null) { num = (num * 2) + curr.val; curr = curr.next; }\nreturn num;",
+      "code": "public class BinaryToDecimal {\n    public static int convert(SinglyLinkedList.Node head) {\n        // Input: Head pointer representing MSB (most significant bit)\n        \n        // Storage: Decimal accumulator\n        int decimalValue = 0;\n        SinglyLinkedList.Node current = head; // Storage\n        \n        // Process: Binary shift accumulation\n        while (current != null) {\n            decimalValue = (decimalValue * 2) + current.val;\n            current = current.next;\n        }\n        \n        // Output: Return decimal result\n        return decimalValue;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts head node representing start of binary number." },
+        { "type": "storage", "start": 6, "end": 7, "desc": "Allocates decimalValue accumulator and current traversal pointer." },
+        { "type": "process", "start": 10, "end": 13, "desc": "Iterates. Shifts existing value left (multiplies by 2) and adds current node's bit value (0 or 1)." },
+        { "type": "output", "start": 16, "end": 16, "desc": "Returns final converted integer value." }
+      ],
+      "quiz": [
+        {
+          "q": "What decimal value is returned for binary list 1 -> 0 -> 1 -> null?",
+          "o": ["3", "5", "6", "7"],
+          "a": 1
+        }
+      ]
+    }
+  ]
+}

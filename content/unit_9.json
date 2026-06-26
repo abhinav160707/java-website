@@ -1,0 +1,118 @@
+{
+  "id": "unit_9",
+  "title": "Unit 9: Trees",
+  "description": "Explore hierarchical structures, parent-child nodes, and depth-first/breadth-first tree traversals.",
+  "topics": [
+    {
+      "id": "tree_creation_terminology",
+      "title": "9.1 Tree Creation & Basic Terminology",
+      "description": "A tree consists of nodes linked by directed edges, forming a hierarchy. Terms include: Root (top), Leaf (no child), Sibling (same parent), Ancestor, Descendant.",
+      "complexity": { "time": "O(1) to create node", "space": "O(1)" },
+      "cheatSheet": "class Node {\n  int val;\n  Node left, right;\n  Node(int v) { val = v; }\n}",
+      "code": "public class BinaryTreeDemo {\n    // Storage: Node structure representation\n    public static class Node {\n        public int val;\n        public Node left;\n        public Node right;\n        \n        public Node(int val) {\n            this.val = val;\n            left = null;\n            right = null;\n        }\n    }\n    \n    public static Node createSampleTree() {\n        // Storage: Allocating nodes\n        Node root = new Node(1);\n        root.left = new Node(2);\n        root.right = new Node(3);\n        root.left.left = new Node(4);\n        \n        // Output: Return created tree\n        return root;\n    }\n}",
+      "ispo": [
+        { "type": "storage", "start": 3, "end": 13, "desc": "Defines class representation Node containing data, left and right references." },
+        { "type": "storage", "start": 17, "end": 20, "desc": "Allocates sample tree root and child nodes in memory." },
+        { "type": "process", "start": 17, "end": 20, "desc": "Links parent nodes to left/right child nodes to establish tree hierarchy." },
+        { "type": "output", "start": 23, "end": 23, "desc": "Returns root node pointer." }
+      ],
+      "quiz": [
+        {
+          "q": "What is a node with no children called in tree terminology?",
+          "o": ["Root Node", "Leaf Node", "Internal Node", "Sibling Node"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "tree_traversals",
+      "title": "9.2 Binary Tree Traversal Techniques",
+      "description": "Visit nodes of a tree in systematic order: Inorder (Left-Root-Right), Preorder (Root-Left-Right), and Postorder (Left-Right-Root).",
+      "complexity": { "time": "O(n)", "space": "O(h) call stack where h is tree height" },
+      "cheatSheet": "// Inorder:\ntraverse(node.left);\nprint(node.val);\ntraverse(node.right);",
+      "code": "public class TreeTraversals {\n    // Storage: Tree Node Representation\n    public static class TreeNode {\n        public int val;\n        public TreeNode left, right;\n        public TreeNode(int val) { this.val = val; }\n    }\n\n    // Process & Output: Recursive Inorder Traversal\n    public static void inorder(TreeNode root) {\n        if (root == null) return;\n        \n        inorder(root.left);                  // Left\n        System.out.print(root.val + \" \");   // Root (Output)\n        inorder(root.right);                 // Right\n    } \n}",
+      "ispo": [
+        { "type": "input", "start": 10, "end": 10, "desc": "Accepts root node of binary tree." },
+        { "type": "storage", "start": 3, "end": 7, "desc": "Defines TreeNode structure." },
+        { "type": "process", "start": 11, "end": 15, "desc": "Recurses left subtree, then processes root node, and recurses right subtree." },
+        { "type": "output", "start": 14, "end": 14, "desc": "Prints node value to console." }
+      ],
+      "quiz": [
+        {
+          "q": "Which traversal order processes the root node first, before visiting left and right child subtrees?",
+          "o": ["Inorder", "Preorder", "Postorder", "Level-order"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "level_order_insertion",
+      "title": "9.3 Insertion in Binary Tree in Level Order",
+      "description": "Insert a node in a binary tree at the first available position in level order traversal (BFS) using a queue.",
+      "complexity": { "time": "O(n)", "space": "O(n) for queue storage" },
+      "cheatSheet": "Queue<Node> q = new LinkedList<>(); q.add(root);\nwhile(!q.isEmpty()) {\n  Node temp = q.poll();\n  if(temp.left == null) { temp.left = new Node(val); break; } else q.add(temp.left);\n}",
+      "code": "import java.util.LinkedList;\nimport java.util.Queue;\n\npublic class LevelOrderInsertion {\n    public static void insert(TreeTraversals.TreeNode root, int key) {\n        // Input: root node and key value\n        if (root == null) return;\n        \n        // Storage: Queue for level order traversal\n        Queue<TreeTraversals.TreeNode> queue = new LinkedList<>();\n        queue.add(root);\n        \n        // Process: Traverse levels\n        while (!queue.isEmpty()) {\n            TreeTraversals.TreeNode temp = queue.peek(); // Storage\n            queue.remove();\n            \n            if (temp.left == null) {\n                temp.left = new TreeTraversals.TreeNode(key); // Storage: new node\n                break;\n            } else {\n                queue.add(temp.left);\n            }\n            \n            if (temp.right == null) {\n                temp.right = new TreeTraversals.TreeNode(key); // Storage: new node\n                break;\n            } else {\n                queue.add(temp.right);\n            }\n        }\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 5, "end": 5, "desc": "Takes root node reference and key to insert." },
+        { "type": "storage", "start": 10, "end": 10, "desc": "Allocates queue in memory to perform level order search." },
+        { "type": "storage", "start": 15, "end": 15, "desc": "Declares temporary node temp to hold dequeued item." },
+        { "type": "storage", "start": 19, "end": 19, "desc": "Creates new TreeNode object for key if left child is vacant." },
+        { "type": "storage", "start": 26, "end": 26, "desc": "Creates new TreeNode object for key if right child is vacant." },
+        { "type": "process", "start": 14, "end": 31, "desc": "Performs BFS traversal. Places key at first vacant left/right child slot and terminates." }
+      ],
+      "quiz": [
+        {
+          "q": "What data structure is used to search for the insertion slot in level order insertion?",
+          "o": ["Stack", "Queue", "Heap", "HashSet"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "max_height_depth",
+      "title": "9.4 Maximum Height or Depth of Binary Tree",
+      "description": "Find the maximum height of a binary tree recursively. Height is the max depth of left/right subtrees plus 1.",
+      "complexity": { "time": "O(n)", "space": "O(h) call stack height" },
+      "cheatSheet": "int maxDepth(Node node) {\n  if (node == null) return 0;\n  return Math.max(maxDepth(node.left), maxDepth(node.right)) + 1;\n}",
+      "code": "public class BinaryTreeHeight {\n    public static int maxDepth(TreeTraversals.TreeNode node) {\n        // Input: node reference\n        \n        // Process: Base case\n        if (node == null) {\n            return 0; // Output\n        }\n        \n        // Process: Recurse left and right heights\n        int leftDepth = maxDepth(node.left);   // Storage\n        int rightDepth = maxDepth(node.right); // Storage\n        \n        // Output: return maximum depth + 1 for root\n        return Math.max(leftDepth, rightDepth) + 1;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Takes current tree node pointer." },
+        { "type": "storage", "start": 11, "end": 12, "desc": "Allocates local variables leftDepth and rightDepth to store child tree depths." },
+        { "type": "process", "start": 11, "end": 12, "desc": "Recursively calculates depths of left and right child subtrees." },
+        { "type": "output", "start": 7, "end": 7, "desc": "Returns height 0 for empty tree/node." },
+        { "type": "output", "start": 15, "end": 15, "desc": "Returns maximum child depth + 1." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the max height of a binary tree containing only the root node?",
+          "o": ["0", "1", "2", "-1"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "delete_binary_tree",
+      "title": "9.5 Deletion in a Binary Tree",
+      "description": "Delete a node from a binary tree by replacing its value with the deepest, rightmost node's value, and then deleting that deepest node.",
+      "complexity": { "time": "O(n)", "space": "O(n) for queue" },
+      "cheatSheet": "1. Find target node and deepest rightmost node via BFS.\n2. Set target.val = deepest.val.\n3. Delete deepest rightmost node.",
+      "code": "import java.util.LinkedList;\nimport java.util.Queue;\n\npublic class BinaryTreeDeletion {\n    public static TreeTraversals.TreeNode deleteNode(TreeTraversals.TreeNode root, int key) {\n        // Input: root node and key to delete\n        if (root == null) return null;\n        if (root.left == null && root.right == null) {\n            if (root.val == key) return null;\n            return root;\n        }\n        \n        // Storage: Queue for BFS\n        Queue<TreeTraversals.TreeNode> q = new LinkedList<>();\n        q.add(root);\n        \n        TreeTraversals.TreeNode temp = null;     // Storage\n        TreeTraversals.TreeNode keyNode = null;  // Storage\n        \n        // Process: BFS to find target node and deepest node\n        while (!q.isEmpty()) {\n            temp = q.peek();\n            q.remove();\n            \n            if (temp.val == key) keyNode = temp;\n            if (temp.left != null) q.add(temp.left);\n            if (temp.right != null) q.add(temp.right);\n        }\n        \n        if (keyNode != null) {\n            int x = temp.val; // Storage: deepest value\n            deleteDeepest(root, temp);\n            keyNode.val = x; // Process: replace data\n        }\n        return root; // Output\n    }\n    \n    private static void deleteDeepest(TreeTraversals.TreeNode root, TreeTraversals.TreeNode dNode) {\n        Queue<TreeTraversals.TreeNode> q = new LinkedList<>();\n        q.add(root);\n        while (!q.isEmpty()) {\n            TreeTraversals.TreeNode temp = q.poll();\n            if (temp == dNode) { temp = null; return; }\n            if (temp.right != null) {\n                if (temp.right == dNode) { temp.right = null; return; }\n                else q.add(temp.right);\n            }\n            if (temp.left != null) {\n                if (temp.left == dNode) { temp.left = null; return; }\n                else q.add(temp.left);\n            }\n        }\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 5, "end": 5, "desc": "Takes root node and key value to delete." },
+        { "type": "storage", "start": 14, "end": 14, "desc": "Allocates traversal queue in memory." },
+        { "type": "storage", "start": 17, "end": 18, "desc": "Declares temp (will hold deepest node) and keyNode (points to target node)." },
+        { "type": "storage", "start": 31, "end": 31, "desc": "Declares variable x to hold deepest node's value." },
+        { "type": "process", "start": 21, "end": 28, "desc": "Uses BFS queue traversal to locate both target node and deepest node." },
+        { "type": "process", "start": 30, "end": 34, "desc": "Copies deepest node value into target node, and calls deleteDeepest helper to prune the leaf." },
+        { "type": "output", "start": 35, "end": 35, "desc": "Returns modified root node pointer." }
+      ],
+      "quiz": [
+        {
+          "q": "Why is the target node's value swapped with the deepest, rightmost leaf's value during binary tree deletion?",
+          "o": ["To sort keys", "To ensure the tree shrinks from the bottom and remains as compact/complete as possible", "To reverse child links", "It is required by compiler"],
+          "a": 1
+        }
+      ]
+    }
+  ]
+}

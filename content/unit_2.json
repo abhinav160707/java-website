@@ -1,0 +1,126 @@
+{
+  "id": "unit_2",
+  "title": "Unit 2: Searching",
+  "description": "Learn how to find indices of items in arrays, including linear scanning and fast O(log n) boundary cuts.",
+  "topics": [
+    {
+      "id": "linear_search",
+      "title": "2.1 Linear / Sequential Search",
+      "description": "Traverse the array from left to right, comparing each element with the target. Useful for unsorted data.",
+      "complexity": { "time": "O(n)", "space": "O(1)" },
+      "cheatSheet": "for(int i = 0; i < arr.length; i++) {\n    if(arr[i] == target) return i;\n}\nreturn -1;",
+      "code": "public class LinearSearch {\n    public static int search(int[] arr, int target) {\n        // Input: Unsorted array 'arr' and value 'target'\n        \n        // Process: Sequential loop comparison\n        for (int i = 0; i < arr.length; i++) {\n            if (arr[i] == target) {\n                // Output: Return index if found\n                return i;\n            }\n        }\n        \n        // Output: Return -1 if not found\n        return -1;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Receives search array 'arr' and target value." },
+        { "type": "storage", "start": 6, "end": 6, "desc": "Allocates index tracking variable 'i'." },
+        { "type": "process", "start": 6, "end": 11, "desc": "Iterates through array, checking if element matches target." },
+        { "type": "output", "start": 9, "end": 9, "desc": "Returns index where element matches." },
+        { "type": "output", "start": 14, "end": 14, "desc": "Returns -1 if target is not in the array." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the worst-case number of comparisons in a Linear Search on an array of size N?",
+          "o": ["log N", "N / 2", "N", "N^2"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "binary_search",
+      "title": "2.2 Binary Search",
+      "description": "Finds targets in a SORTED array by dividing the search interval in half. Fast logarithmic runtime.",
+      "complexity": { "time": "O(log n)", "space": "O(1)" },
+      "cheatSheet": "int low = 0, high = arr.length - 1;\nwhile(low <= high) {\n    int mid = low + (high - low) / 2;\n    if(arr[mid] == target) return mid;\n    else if(arr[mid] < target) low = mid + 1;\n    else high = mid - 1;\n}",
+      "code": "public class BinarySearch {\n    public static int search(int[] arr, int target) {\n        // Input: Sorted array 'arr' and search 'target'\n        \n        // Storage: Pointer variables\n        int low = 0;\n        int high = arr.length - 1;\n        \n        // Process: Binary halving algorithm\n        while (low <= high) {\n            int mid = low + (high - low) / 2; // Midpoint division\n            \n            if (arr[mid] == target) {\n                return mid; // Output: Index found\n            } else if (arr[mid] < target) {\n                low = mid + 1; // Discard left half\n            } else {\n                high = mid - 1; // Discard right half\n            }\n        }\n        \n        return -1; // Output: Not found\n    } \n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Takes sorted array 'arr' and target value." },
+        { "type": "storage", "start": 6, "end": 7, "desc": "Allocates boundary markers low and high in storage memory." },
+        { "type": "storage", "start": 11, "end": 11, "desc": "Declares and calculates mid to store the middle index." },
+        { "type": "process", "start": 10, "end": 20, "desc": "Checks middle value and halves the search window by shifting high or low pointers." },
+        { "type": "output", "start": 14, "end": 14, "desc": "Returns index where element matches." },
+        { "type": "output", "start": 22, "end": 22, "desc": "Returns -1 if boundaries cross without matching target." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the critical prerequisite for Binary Search?",
+          "o": ["The array size must be even", "The array elements must be sorted", "The array must not contain duplicate keys", "The array must be dynamic"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "uniform_binary_search",
+      "title": "2.3 Uniform Binary Search",
+      "description": "An optimization of binary search where a lookup table of midpoints is precomputed to avoid arithmetic division inside search loop.",
+      "complexity": { "time": "O(log n)", "space": "O(n) for lookup table" },
+      "cheatSheet": "// Precompute delta lookup table\nint[] delta = new int[tableSize];\n// Inside search loop:\nindex += (target > arr[index]) ? delta[step] : -delta[step];",
+      "code": "public class UniformBinarySearch {\n    public static int search(int[] arr, int target, int[] delta) {\n        // Input: Sorted array, target, and precomputed delta lookup table\n        \n        // Storage: Pointer state\n        int i = delta[0] - 1; // Initial index midpoint\n        int d = 0;            // Step counter\n        int n = arr.length;\n        \n        // Process: Uniform lookup stepping\n        while (true) {\n            if (i < 0 || i >= n) return -1; // Boundary check\n            \n            if (target == arr[i]) {\n                return i; // Output: Found\n            } else if (delta[d] == 0) {\n                break; // Search exhausted\n            } else {\n                if (target < arr[i]) {\n                    i -= delta[++d];\n                } else {\n                    i += delta[++d];\n                }\n            }\n        }\n        return -1; // Output: Not found\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts sorted array, target key, and precalculated offset array delta." },
+        { "type": "storage", "start": 5, "end": 7, "desc": "Creates pointer i, delta step counter d, and array limit parameter n." },
+        { "type": "process", "start": 10, "end": 25, "desc": "Steps through loop. Checks index bounds. Increments or decrements index i using precalculated delta lookup values based on comparisons." },
+        { "type": "output", "start": 12, "end": 12, "desc": "Returns -1 if pointer traverses outside array bounds." },
+        { "type": "output", "start": 15, "end": 15, "desc": "Returns index i when element matches." },
+        { "type": "output", "start": 27, "end": 27, "desc": "Returns -1 if loop breaks without a match." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the primary advantage of Uniform Binary Search over standard Binary Search?",
+          "o": ["Better asymptotic complexity", "Faster execution on systems where addition/subtraction is faster than division/shift operations", "Works on unsorted arrays", "Requires less memory"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "interpolation_search",
+      "title": "2.4 Interpolation Search",
+      "description": "An improvement over Binary Search for sorted arrays with uniformly distributed values. Uses linear interpolation formula to probe closer to target position.",
+      "complexity": { "time": "O(log log n) average, O(n) worst case", "space": "O(1)" },
+      "cheatSheet": "// Probing position calculation formula\npos = low + (((double)(high - low) / (arr[high] - arr[low])) * (target - arr[low]));",
+      "code": "public class InterpolationSearch {\n    public static int search(int[] arr, int target) {\n        // Input: Sorted array and target\n        \n        // Storage: Bounds pointers\n        int low = 0;\n        int high = arr.length - 1;\n        \n        // Process: Probing loops\n        while (low <= high && target >= arr[low] && target <= arr[high]) {\n            if (low == high) {\n                if (arr[low] == target) return low; // Output\n                return -1;\n            }\n            \n            // Linear interpolation probing formula\n            int pos = low + (int)(((double)(high - low) / (arr[high] - arr[low])) * (target - arr[low]));\n            \n            if (arr[pos] == target) {\n                return pos; // Output: Match\n            }\n            if (arr[pos] < target) {\n                low = pos + 1; // Recurse right\n            } else {\n                high = pos - 1; // Recurse left\n            }\n        }\n        return -1; // Output: Failure\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts sorted array and target value." },
+        { "type": "storage", "start": 6, "end": 7, "desc": "Allocates boundary variables low and high." },
+        { "type": "storage", "start": 17, "end": 17, "desc": "Calculates and stores position probe index 'pos'." },
+        { "type": "process", "start": 10, "end": 26, "desc": "Calculates probe index using value ratios, evaluates matches, and shrinks search boundaries." },
+        { "type": "output", "start": 12, "end": 13, "desc": "Handles single element range boundary checks and returns index or -1." },
+        { "type": "output", "start": 20, "end": 20, "desc": "Returns matched probe position index." },
+        { "type": "output", "start": 28, "end": 28, "desc": "Returns -1 if boundaries cross or target is outside array limits." }
+      ],
+      "quiz": [
+        {
+          "q": "Under what distribution does Interpolation Search achieve its O(log log n) average complexity?",
+          "o": ["Exponential distribution", "Uniform distribution of elements", "Normal distribution", "Random distribution"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "fibonacci_search",
+      "title": "2.5 Fibonacci Search",
+      "description": "A divide and conquer searching method that uses Fibonacci numbers to divide the search interval. Uses addition and subtraction instead of division.",
+      "complexity": { "time": "O(log n)", "space": "O(1)" },
+      "cheatSheet": "// Track three Fibonacci numbers\nfibM = fibM_1 + fibM_2;\n// Offset updates\nif(arr[i] < target) { offset = i; }",
+      "code": "public class FibonacciSearch {\n    public static int search(int[] arr, int target) {\n        // Input: Sorted array and target\n        int n = arr.length; // Storage\n        \n        // Storage: Initialize Fibonacci numbers\n        int fibM2 = 0; // (m-2)th fib\n        int fibM1 = 1; // (m-1)th fib\n        int fibM = fibM2 + fibM1; // mth fib\n        \n        while (fibM < n) {\n            fibM2 = fibM1;\n            fibM1 = fibM;\n            fibM = fibM2 + fibM1;\n        }\n        \n        int offset = -1; // Storage\n        \n        // Process: Fibonacci range check\n        while (fibM > 1) {\n            int i = Math.min(offset + fibM2, n - 1); // Storage: Probe index\n            \n            if (arr[i] < target) {\n                fibM = fibM1;\n                fibM1 = fibM2;\n                fibM2 = fibM - fibM1;\n                offset = i;\n            } else if (arr[i] > target) {\n                fibM = fibM2;\n                fibM1 = fibM1 - fibM2;\n                fibM2 = fibM - fibM1;\n            } else {\n                return i; // Output: Match found\n            }\n        }\n        \n        if (fibM1 == 1 && arr[offset + 1] == target) {\n            return offset + 1; // Output: Boundary check match\n        }\n        \n        return -1; // Output: Failure\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts sorted array and target key." },
+        { "type": "storage", "start": 4, "end": 4, "desc": "Stores size of array n." },
+        { "type": "storage", "start": 7, "end": 9, "desc": "Creates state variables for m, m-1, and m-2 Fibonacci offsets." },
+        { "type": "storage", "start": 17, "end": 17, "desc": "Creates offset pointer variable initialized to -1." },
+        { "type": "storage", "start": 21, "end": 21, "desc": "Calculates probe index variable i using offset and Fibonacci values." },
+        { "type": "process", "start": 11, "end": 15, "desc": "Generates smallest Fibonacci number greater than or equal to n." },
+        { "type": "process", "start": 20, "end": 35, "desc": "Loops. Adjusts Fibonacci variables to segment array, shifting offset when target exceeds arr[i]." },
+        { "type": "output", "start": 33, "end": 33, "desc": "Returns index i when element matches." },
+        { "type": "output", "start": 38, "end": 38, "desc": "Evaluates final index element and returns offset + 1 if matching target." },
+        { "type": "output", "start": 41, "end": 41, "desc": "Returns -1 if target is not found." }
+      ],
+      "quiz": [
+        {
+          "q": "What mathematical properties does Fibonacci Search exploit to partition array bounds?",
+          "o": ["Golden ratio approximation of subdivisions", "Prime factorizations", "Logarithmic distributions", "Binary trees"],
+          "a": 0
+        }
+      ]
+    }
+  ]
+}

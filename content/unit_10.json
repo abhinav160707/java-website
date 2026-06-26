@@ -1,0 +1,173 @@
+{
+  "id": "unit_10",
+  "title": "Unit 10: Binary Search Tree (BST)",
+  "description": "A binary tree with the property: left descendants < parent < right descendants, allowing fast search and insert.",
+  "topics": [
+    {
+      "id": "bst_insert_search",
+      "title": "10.1 & 10.5 BST Search & Insertion",
+      "description": "Locate elements by comparing with root and recursing left/right. Insert new nodes at leaf positions.",
+      "complexity": { "time": "O(log n) average, O(n) worst case", "space": "O(h) recursion height" },
+      "cheatSheet": "// Insert:\nif(val < root.val) root.left = insert(root.left, val);\nelse root.right = insert(root.right, val);\nreturn root;",
+      "code": "public class BinarySearchTree {\n    public static class Node {\n        int val;\n        Node left, right;\n        Node(int v) { val = v; }\n    }\n\n    // Process & Storage: Search key\n    public static boolean search(Node root, int key) {\n        // Base Cases\n        if (root == null) return false; // Output: Not found\n        if (root.val == key) return true; // Output: Found\n\n        // Process: Recursive branching\n        if (key < root.val) {\n            return search(root.left, key);\n        } else {\n            return search(root.right, key);\n        }\n    }\n\n    // Process & Storage: Insert key\n    public static Node insert(Node root, int key) {\n        if (root == null) {\n            return new Node(key); // Storage allocation\n        }\n        if (key < root.val) {\n            root.left = insert(root.left, key);\n        } else if (key > root.val) {\n            root.right = insert(root.right, key);\n        }\n        return root;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 9, "end": 9, "desc": "Search accepts root pointer and target key to find." },
+        { "type": "input", "start": 23, "end": 23, "desc": "Insert accepts root node pointer and key value to insert." },
+        { "type": "storage", "start": 2, "end": 6, "desc": "Defines Node class structure." },
+        { "type": "storage", "start": 25, "end": 25, "desc": "Allocates memory for a new Node when a null leaf slot is reached." },
+        { "type": "process", "start": 15, "end": 19, "desc": "Branches search left or right depending on whether key is smaller or larger than root." },
+        { "type": "process", "start": 27, "end": 31, "desc": "Recurses insert left or right and updates pointers." },
+        { "type": "output", "start": 11, "end": 11, "desc": "Returns false if tree traversal finishes without finding the key." },
+        { "type": "output", "start": 12, "end": 12, "desc": "Returns true if key matches root value." },
+        { "type": "output", "start": 32, "end": 32, "desc": "Returns root node pointer to maintain recursive links." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the average time complexity of searching in a Balanced BST of size N?",
+          "o": ["O(N)", "O(log N)", "O(N log N)", "O(1)"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "bst_min_value",
+      "title": "10.2 Find Minimum Value in BST",
+      "description": "Find node with the minimum value. Since left descendants are smaller, the leftmost leaf contains the minimum value.",
+      "complexity": { "time": "O(h) where h is height", "space": "O(1)" },
+      "cheatSheet": "Node curr = root;\nwhile(curr.left != null) curr = curr.left;\nreturn curr.val;",
+      "code": "public class BSTMinVal {\n    public static int findMin(BinarySearchTree.Node root) {\n        // Input: root pointer\n        if (root == null) return -1;\n        \n        BinarySearchTree.Node current = root; // Storage\n        \n        // Process: Keep sliding left\n        while (current.left != null) {\n            current = current.left;\n        }\n        \n        // Output: leftmost value\n        return current.val;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts BST root node reference." },
+        { "type": "storage", "start": 6, "end": 6, "desc": "Declares current pointer walking variable." },
+        { "type": "process", "start": 9, "end": 11, "desc": "Traverses down the left child pointers until a leaf is found." },
+        { "type": "output", "start": 14, "end": 14, "desc": "Returns the value of the leftmost node." }
+      ],
+      "quiz": [
+        {
+          "q": "Where is the minimum value located in a Binary Search Tree?",
+          "o": ["Root node", "Rightmost leaf node", "Leftmost node", "Random node"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "check_is_bst",
+      "title": "10.3 Check if Binary Tree is BST",
+      "description": "Verify if a binary tree is a valid BST. Every node must lie within a specific min and max range value.",
+      "complexity": { "time": "O(n)", "space": "O(h) stack call" },
+      "cheatSheet": "boolean isValid(Node node, long min, long max) {\n  if(node == null) return true;\n  if(node.val <= min || node.val >= max) return false;\n  return isValid(node.left, min, node.val) && isValid(node.right, node.val, max);\n}",
+      "code": "public class BSTChecker {\n    public static boolean isBST(BinarySearchTree.Node root) {\n        // Input: root node\n        return validate(root, Long.MIN_VALUE, Long.MAX_VALUE);\n    }\n    \n    private static boolean validate(BinarySearchTree.Node node, long min, long max) {\n        // Process: Base check\n        if (node == null) return true; // Output: base\n        \n        // Process: Range check\n        if (node.val <= min || node.val >= max) {\n            return false; // Output: invalid\n        }\n        \n        // Process: Recurse left and right boundaries\n        return validate(node.left, min, node.val) && \n               validate(node.right, node.val, max); // Output\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts root node of binary tree." },
+        { "type": "process", "start": 9, "end": 18, "desc": "Validates if node value lies in bounds [min, max]. Recursively evaluates left child (with max=parent) and right child (with min=parent)." },
+        { "type": "output", "start": 9, "end": 9, "desc": "Returns true for empty subtree." },
+        { "type": "output", "start": 13, "end": 13, "desc": "Returns false if node value violates ranges." },
+        { "type": "output", "start": 17, "end": 18, "desc": "Returns overall logical AND result of child validations." }
+      ],
+      "quiz": [
+        {
+          "q": "Why is check 'root.left.val < root.val < root.right.val' insufficient to validate a BST?",
+          "o": ["It is too slow", "It only checks local parent-child relations but violates overall subtree level boundaries (e.g. a left descendant exceeding the root)", "It throws exceptions", "It is sufficient"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "second_largest_bst",
+      "title": "10.4 Second Largest Element in BST",
+      "description": "Find the second largest element in a BST. Traverse in reverse inorder (Right-Root-Left) and return the 2nd visited node.",
+      "complexity": { "time": "O(h)", "space": "O(h) recursive stack" },
+      "cheatSheet": "Reverse Inorder: traverse right first, increment counter, check counter == 2.",
+      "code": "public class SecondLargestBST {\n    private static class Counter {\n        int count = 0; // Storage\n        int result = -1; // Storage\n    }\n    \n    public static int findSecondLargest(BinarySearchTree.Node root) {\n        // Input: root pointer\n        Counter c = new Counter(); // Storage\n        reverseInorder(root, c);\n        return c.result; // Output\n    }\n    \n    private static void reverseInorder(BinarySearchTree.Node node, Counter c) {\n        if (node == null || c.count >= 2) return;\n        \n        // Process: visit right first (largest values)\n        reverseInorder(node.right, c);\n        \n        c.count++;\n        if (c.count == 2) {\n            c.result = node.val; // Storage update\n            return;\n        }\n        \n        // Process: visit left\n        reverseInorder(node.left, c);\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 7, "end": 7, "desc": "Takes root node pointer." },
+        { "type": "storage", "start": 3, "end": 4, "desc": "Defines helper Counter object containing iteration count and result variable." },
+        { "type": "process", "start": 17, "end": 27, "desc": "Iterates in reverse inorder (right-subtree first). Increments counter and returns when count reaches 2." },
+        { "type": "output", "start": 11, "end": 11, "desc": "Returns calculated second largest value." }
+      ],
+      "quiz": [
+        {
+          "q": "If a BST has no right child for root, where is the second largest element?",
+          "o": ["Root", "Rightmost node of root's left subtree", "Leftmost leaf", "Does not exist"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "bst_elements_equality",
+      "title": "10.6 Check BSTs Elements Equality",
+      "description": "Check if two Binary Search Trees (with different topologies) contain the exact same set of unique values.",
+      "complexity": { "time": "O(n1 + n2)", "space": "O(n1 + n2) for list storage" },
+      "cheatSheet": "Perform Inorder traversals on both BSTs. Compare resulting sorted arrays for equality.",
+      "code": "import java.util.ArrayList;\n\npublic class BSTEquality {\n    public static boolean areEqual(BinarySearchTree.Node root1, BinarySearchTree.Node root2) {\n        // Input: two BST roots\n        ArrayList<Integer> list1 = new ArrayList<>(); // Storage\n        ArrayList<Integer> list2 = new ArrayList<>(); // Storage\n        \n        // Process: get sorted lists\n        inorder(root1, list1);\n        inorder(root2, list2);\n        \n        // Output: check equality\n        return list1.equals(list2);\n    }\n    \n    private static void inorder(BinarySearchTree.Node node, ArrayList<Integer> list) {\n        if (node == null) return;\n        inorder(node.left, list);\n        list.add(node.val);\n        inorder(node.right, list);\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 4, "end": 4, "desc": "Takes roots root1 and root2 of both trees." },
+        { "type": "storage", "start": 6, "end": 7, "desc": "Allocates two ArrayLists to hold values of the tree nodes." },
+        { "type": "process", "start": 10, "end": 11, "desc": "Performs inorder traversal of both trees to extract their sorted values." },
+        { "type": "output", "start": 14, "end": 14, "desc": "Compares lists and returns boolean result." }
+      ],
+      "quiz": [
+        {
+          "q": "Why does comparing the Inorder lists of two BSTs determine if they contain the same values?",
+          "o": ["Inorder lists are always random", "Inorder traversal of a BST yields elements in sorted order; sorted arrays are equal if and only if they contain the same values in the same sequence", "It does not work", "It is only for trees of same heights"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "kth_largest_bst",
+      "title": "10.7 Kth Largest Element in BST",
+      "description": "Given a BST and a positive integer k (modification not allowed), find the k'th largest element. Uses a reverse inorder traversal (Right, Root, Left) which visits nodes in descending order.",
+      "complexity": {
+        "time": "O(h + k) average, O(n) worst case",
+        "space": "O(h) recursion height"
+      },
+      "cheatSheet": "Reverse Inorder = Right -> Root -> Left visits values largest-first.\nKeep a counter; the k-th node visited is the k-th largest. Stop early once found.",
+      "code": "public class KthLargestBST {\n    static int count = 0;   // Storage: nodes visited so far\n    static int result = -1; // Storage: holds the answer\n\n    public static int kthLargest(BinarySearchTree.Node root, int k) {\n        // Input: BST root and rank k (from the largest)\n        count = 0;\n        result = -1;\n        reverseInorder(root, k);\n        return result; // Output: the k-th largest value\n    }\n\n    private static void reverseInorder(BinarySearchTree.Node node, int k) {\n        if (node == null || count >= k) return; // prune once found\n        // Process: visit RIGHT subtree first (largest values)\n        reverseInorder(node.right, k);\n        count++;\n        if (count == k) {            // Process: k-th node reached\n            result = node.val;\n            return;\n        }\n        reverseInorder(node.left, k);\n    }\n}",
+      "ispo": [
+        {
+          "type": "input",
+          "start": 5,
+          "end": 5,
+          "desc": "Accepts the BST root and integer k (the rank counted from the largest element)."
+        },
+        {
+          "type": "storage",
+          "start": 7,
+          "end": 8,
+          "desc": "Resets the shared visit counter and the result holder before traversal."
+        },
+        {
+          "type": "process",
+          "start": 16,
+          "end": 16,
+          "desc": "Recurses into the RIGHT subtree first so larger values are visited before smaller ones (descending order)."
+        },
+        {
+          "type": "process",
+          "start": 17,
+          "end": 21,
+          "desc": "Increments the visit counter; when it equals k, records the current node's value and stops descending."
+        },
+        {
+          "type": "output",
+          "start": 10,
+          "end": 10,
+          "desc": "Returns the recorded k-th largest value."
+        }
+      ],
+      "quiz": [
+        {
+          "q": "How do you find the K-th largest element in a BST without modifying it?",
+          "o": [
+            "Do a normal inorder traversal and take the first element",
+            "Do a reverse inorder traversal (Right, Root, Left) and stop at the K-th node visited",
+            "Use level-order traversal and count from the root down",
+            "Sort all nodes by their height in the tree"
+          ],
+          "a": 1
+        }
+      ]
+    }
+  ]
+}

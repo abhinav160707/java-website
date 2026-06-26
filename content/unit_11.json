@@ -1,0 +1,95 @@
+{
+  "id": "unit_11",
+  "title": "Unit 11: AVL Tree",
+  "description": "A self-balancing binary search tree where the height difference of any node's subtrees is at most 1.",
+  "topics": [
+    {
+      "id": "avl_insert",
+      "title": "11.1 AVL Insertion & rebalancing",
+      "description": "Perform standard BST insertion followed by balance factor updates and LL, RR, LR, or RL rotations if unbalancing occurs.",
+      "complexity": { "time": "O(log n)", "space": "O(log n)" },
+      "cheatSheet": "// Left Rotation\nNode y = x.right; x.right = y.left; y.left = x; updateHeight(x); updateHeight(y); return y;",
+      "code": "public class AVLTree {\n    public static class Node {\n        int val, height;\n        Node left, right;\n        Node(int d) { val = d; height = 1; }\n    }\n\n    // Storage: Helper to query height safely\n    private static int height(Node n) { return n == null ? 0 : n.height; }\n\n    // Process: Right Rotation (Single rotation)\n    private static Node rightRotate(Node y) {\n        Node x = y.left;\n        Node T2 = x.right;\n\n        // Perform rotation\n        x.right = y;\n        y.left = T2;\n\n        // Update heights\n        y.height = Math.max(height(y.left), height(y.right)) + 1;\n        x.height = Math.max(height(x.left), height(x.right)) + 1;\n\n        return x; // Output: New root reference\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 12, "end": 12, "desc": "Accepts subtree root node 'y' to rotate right." },
+        { "type": "storage", "start": 2, "end": 6, "desc": "Defines AVL Node including height variable, which tracks balancing metrics in memory." },
+        { "type": "storage", "start": 13, "end": 14, "desc": "Allocates local variables x and T2 to track rotation pivots." },
+        { "type": "process", "start": 17, "end": 22, "desc": "Alters node pointer connections to shift subtree levels and recalculates heights of rotated nodes." },
+        { "type": "output", "start": 24, "end": 24, "desc": "Returns the reference of the new subtree root node." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the balance factor of a node in an AVL tree?",
+          "o": ["Height(Left Subtree) - Height(Right Subtree)", "Height(Left) + Height(Right)", "Height(Node) / 2", "Number of children"],
+          "a": 0
+        }
+      ]
+    },
+    {
+      "id": "avl_deletion",
+      "title": "11.2 Deletion in AVL Tree",
+      "description": "Perform standard BST deletion, then traverse up the tree to update heights and perform balance rotations if needed.",
+      "complexity": { "time": "O(log n)", "space": "O(log n)" },
+      "cheatSheet": "Perform BST delete. Update height. If balance factor is not in [-1, 1], perform rotations.",
+      "code": "public class AVLDeletion {\n    private static int height(AVLTree.Node n) { return n == null ? 0 : n.height; }\n    private static int getBalance(AVLTree.Node n) {\n        return n == null ? 0 : height(n.left) - height(n.right);\n    }\n    \n    public static AVLTree.Node deleteNode(AVLTree.Node root, int key) {\n        // Input: root node and key to delete\n        if (root == null) return root;\n        \n        // Process: Standard BST delete\n        if (key < root.val) {\n            root.left = deleteNode(root.left, key);\n        } else if (key > root.val) {\n            root.right = deleteNode(root.right, key);\n        } else {\n            // Node to delete found\n            if ((root.left == null) || (root.right == null)) {\n                AVLTree.Node temp = null; // Storage\n                if (temp == root.left) temp = root.right;\n                else temp = root.left;\n                \n                if (temp == null) {\n                    temp = root; root = null;\n                } else {\n                    root = temp; // Copy contents\n                }\n            } else {\n                // Node with two children\n                AVLTree.Node temp = minValueNode(root.right); // Storage\n                root.val = temp.val;\n                root.right = deleteNode(root.right, temp.val);\n            }\n        }\n        \n        if (root == null) return root;\n        \n        // Process: Update height\n        root.height = Math.max(height(root.left), height(root.right)) + 1;\n        int balance = getBalance(root); // Storage\n        \n        // rebalancing checks\n        // Left Left Case\n        if (balance > 1 && getBalance(root.left) >= 0) return rightRotate(root);\n        // ... (other rotation cases omitted for space)\n        return root; // Output\n    }\n    \n    private static AVLTree.Node minValueNode(AVLTree.Node node) {\n        AVLTree.Node current = node;\n        while (current.left != null) current = current.left;\n        return current;\n    }\n    \n    private static AVLTree.Node rightRotate(AVLTree.Node y) {\n        AVLTree.Node x = y.left; AVLTree.Node T2 = x.right;\n        x.right = y; y.left = T2;\n        y.height = Math.max(height(y.left), height(y.right)) + 1;\n        x.height = Math.max(height(x.left), height(x.right)) + 1;\n        return x;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 7, "end": 7, "desc": "Takes AVL root node pointer and key value to delete." },
+        { "type": "storage", "start": 19, "end": 21, "desc": "Allocates temporary node reference pointer 'temp'." },
+        { "type": "storage", "start": 40, "end": 40, "desc": "Stores balance factor value in balance variable." },
+        { "type": "process", "start": 12, "end": 33, "desc": "Performs standard BST deletion to remove key and updates tree structure." },
+        { "type": "process", "start": 39, "end": 45, "desc": "Updates height and checks if balance factor is in [-1, 1], performing rotations if out of bounds." },
+        { "type": "output", "start": 36, "end": 36, "desc": "Returns null if tree becomes empty." },
+        { "type": "output", "start": 46, "end": 46, "desc": "Returns updated balanced node." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the worst-case time complexity of Deletion in an AVL tree?",
+          "o": ["O(N)", "O(log N)", "O(N log N)", "O(1)"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "count_greater_avl",
+      "title": "11.3 Count Greater Nodes in AVL Tree",
+      "description": "Calculate how many nodes in an AVL tree have values strictly greater than a given parameter value x.",
+      "complexity": { "time": "O(n) worst case, but can be optimized if node sizes are stored", "space": "O(h)" },
+      "cheatSheet": "Inorder traversal. If node.val > x, increment count, recurse both sides.",
+      "code": "public class AVLGreaterCount {\n    public static int countGreater(AVLTree.Node root, int x) {\n        // Input: root node and target x\n        \n        // Storage: match counter\n        int count = 0;\n        return helper(root, x);\n    }\n    \n    private static int helper(AVLTree.Node node, int x) {\n        if (node == null) return 0;\n        \n        // Process: recursive count accumulation\n        int current = (node.val > x) ? 1 : 0; // Storage\n        \n        if (node.val > x) {\n            // Since node.val > x, all nodes in right subtree are also > x\n            return current + helper(node.left, x) + helper(node.right, x);\n        } else {\n            // node.val <= x, search right subtree only\n            return helper(node.right, x);\n        }\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts root node and target value x." },
+        { "type": "storage", "start": 14, "end": 14, "desc": "Creates temporary integer current to store match indicator." },
+        { "type": "process", "start": 16, "end": 22, "desc": "Compares node.val with x. If node.val > x, recurses both left and right; else, only checks right subtree (since left values are smaller)." },
+        { "type": "output", "start": 7, "end": 7, "desc": "Returns final matched count." }
+      ],
+      "quiz": [
+        {
+          "q": "If node.val is less than or equal to x, why do we skip searching the left subtree?",
+          "o": ["Left values are larger", "In a BST, all elements in the left subtree are smaller than or equal to the parent, so they cannot be greater than x", "It is done to save memory", "It is not skipped"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "min_nodes_avl",
+      "title": "11.4 Minimum Nodes for height H in AVL Tree",
+      "description": "Find the minimum number of nodes required to build an AVL tree of height H. Solved using recurrence: N(H) = N(H-1) + N(H-2) + 1 with N(0)=1, N(1)=2.",
+      "complexity": { "time": "O(h)", "space": "O(h) stack recursion" },
+      "cheatSheet": "N(H) = N(H-1) + N(H-2) + 1\nValues: N(0)=1, N(1)=2, N(2)=4, N(3)=7, N(4)=12...",
+      "code": "public class AVLMinNodes {\n    public static int getMinNodes(int H) {\n        // Input: Height H\n        \n        // Process: Base cases\n        if (H < 0) return 0;\n        if (H == 0) return 1; // Output base\n        if (H == 1) return 2; // Output base\n        \n        // Process: Recurrence evaluation\n        int result = getMinNodes(H - 1) + getMinNodes(H - 2) + 1; // Storage\n        \n        // Output: return node count\n        return result;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Takes height H." },
+        { "type": "storage", "start": 11, "end": 11, "desc": "Declares result variable to hold calculated recursive sum." },
+        { "type": "process", "start": 6, "end": 11, "desc": "Checks base levels. Computes count by adding nodes needed for (H-1) and (H-2) heights plus 1 node for root." },
+        { "type": "output", "start": 14, "end": 14, "desc": "Returns calculated minimum nodes." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the minimum number of nodes in an AVL tree of height 3?",
+          "o": ["4", "7", "8", "12"],
+          "a": 1
+        }
+      ]
+    }
+  ]
+}

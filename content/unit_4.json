@@ -1,0 +1,124 @@
+{
+  "id": "unit_4",
+  "title": "Unit 4: Divide and Conquer",
+  "description": "Solve sorting tasks by partitioning datasets recursively, enabling O(n log n) efficiency.",
+  "topics": [
+    {
+      "id": "quick_sort",
+      "title": "4.1 Quick Sort",
+      "description": "Picks a pivot, partitions elements around pivot (smaller left, larger right), and applies quicksort recursively to sub-arrays.",
+      "complexity": { "time": "O(n log n) average, O(n^2) worst case", "space": "O(log n) call stack space" },
+      "cheatSheet": "void quickSort(int[] arr, int low, int high) {\n    if (low < high) {\n        int pi = partition(arr, low, high);\n        quickSort(arr, low, pi - 1);\n        quickSort(arr, pi + 1, high);\n    }\n}",
+      "code": "public class QuickSort {\n    public static void sort(int[] arr, int low, int high) {\n        // Input: Array 'arr', boundary limits 'low' and 'high'\n        if (low < high) {\n            // Process: Find partitioning index\n            int pivotIndex = partition(arr, low, high);\n            \n            // Process: Recursive calls\n            sort(arr, low, pivotIndex - 1);  // Left partition\n            sort(arr, pivotIndex + 1, high); // Right partition\n        }\n    }\n    \n    private static int partition(int[] arr, int low, int high) {\n        // Storage: Pivot selection\n        int pivot = arr[high]; \n        int i = (low - 1); // Index of smaller element\n        \n        // Process: Swapping elements based on pivot comparison\n        for (int j = low; j < high; j++) {\n            if (arr[j] < pivot) {\n                i++;\n                int temp = arr[i];\n                arr[i] = arr[j];\n                arr[j] = temp;\n            }\n        }\n        \n        // Process: Swap pivot to its final sorted place\n        int temp = arr[i + 1];\n        arr[i + 1] = arr[high];\n        arr[high] = temp;\n        \n        // Output: Return partition index\n        return i + 1; \n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Receives array low and high limits." },
+        { "type": "input", "start": 14, "end": 14, "desc": "Partition routine receives the bounds." },
+        { "type": "storage", "start": 6, "end": 6, "desc": "Stores partitioning pivot index." },
+        { "type": "storage", "start": 16, "end": 17, "desc": "Declares pivot value and index pointer i." },
+        { "type": "storage", "start": 23, "end": 23, "desc": "Declares temp variable inside loop." },
+        { "type": "storage", "start": 30, "end": 30, "desc": "Declares temp variable outside loop." },
+        { "type": "process", "start": 4, "end": 11, "desc": "Drives recursive divide and conquer branching." },
+        { "type": "process", "start": 20, "end": 27, "desc": "Loops, shifting smaller elements left." },
+        { "type": "process", "start": 30, "end": 32, "desc": "Swaps pivot element to sorted boundary." },
+        { "type": "output", "start": 35, "end": 35, "desc": "Returns index of pivot partition." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the partition method's goal in Quick Sort?",
+          "o": ["To sort the entire array", "To place the pivot in its correct sorted position and group smaller elements to the left, larger to the right", "To split array into two equal halves", "To reverse the array"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "merge_sort",
+      "title": "4.2 Merge Sort",
+      "description": "Recursively split array into halves, sort each half, and merge sorted halves back together.",
+      "complexity": { "time": "O(n log n)", "space": "O(n) auxiliary memory" },
+      "cheatSheet": "void mergeSort(int[] arr, int l, int r) {\n  if(l < r) {\n    int m = l + (r-l)/2;\n    mergeSort(arr, l, m);\n    mergeSort(arr, m+1, r);\n    merge(arr, l, m, r);\n  }\n}",
+      "code": "public class MergeSort {\n    public static void sort(int[] arr, int l, int r) {\n        // Input: bounds l and r\n        if (l < r) {\n            int m = l + (r - l) / 2; // Storage: midpoint\n            \n            // Process: recursive splits\n            sort(arr, l, m);\n            sort(arr, m + 1, r);\n            \n            // Process: merge sorted halves\n            merge(arr, l, m, r);\n        }\n    }\n    \n    private static void merge(int[] arr, int l, int m, int r) {\n        // Storage: calculate sizes\n        int n1 = m - l + 1;\n        int n2 = r - m;\n        int[] L = new int[n1];\n        int[] R = new int[n2];\n        \n        for (int i = 0; i < n1; ++i) L[i] = arr[l + i];\n        for (int j = 0; j < n2; ++j) R[j] = arr[m + 1 + j];\n        \n        // Process: merge temporary arrays\n        int i = 0, j = 0, k = l;\n        while (i < n1 && j < n2) {\n            if (L[i] <= R[j]) {\n                arr[k] = L[i++];\n            } else {\n                arr[k] = R[j++];\n            }\n            k++;\n        }\n        while (i < n1) arr[k++] = L[i++];\n        while (j < n2) arr[k++] = R[j++];\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts boundaries l and r." },
+        { "type": "storage", "start": 5, "end": 5, "desc": "Allocates midpoint 'm'." },
+        { "type": "storage", "start": 17, "end": 21, "desc": "Allocates auxiliary arrays L and R in memory." },
+        { "type": "process", "start": 8, "end": 12, "desc": "Recursively splits array and calls merge function." },
+        { "type": "process", "start": 27, "end": 37, "desc": "Iterates and merges items from temporary arrays back to original array in sorted order." }
+      ],
+      "quiz": [
+        {
+          "q": "Is Merge Sort a stable sorting algorithm (does it preserve original order of duplicates)?",
+          "o": ["Yes", "No", "Depends on array size", "Only for integers"],
+          "a": 0
+        }
+      ]
+    },
+    {
+      "id": "heap_sort",
+      "title": "4.3 Heap Sort",
+      "description": "Convert the array to a Max-Heap binary tree representation, then repeatedly remove the maximum root and heapify to sort.",
+      "complexity": { "time": "O(n log n)", "space": "O(1) auxiliary space" },
+      "cheatSheet": "// Build heap (rearrange array)\nfor(int i=n/2-1; i>=0; i--) heapify(arr, n, i);\n// One by one extract element from heap\nfor(int i=n-1; i>0; i--) { swap(arr, 0, i); heapify(arr, i, 0); }",
+      "code": "public class HeapSort {\n    public static void sort(int[] arr) {\n        // Input: Array to sort\n        int n = arr.length; // Storage\n        \n        // Process: Build heap (rearrange array)\n        for (int i = n / 2 - 1; i >= 0; i--) {\n            heapify(arr, n, i);\n        }\n        \n        // Process: Extract elements from heap\n        for (int i = n - 1; i > 0; i--) {\n            // Swap current root to end\n            int temp = arr[0];\n            arr[0] = arr[i];\n            arr[i] = temp;\n            \n            // Heapify root node\n            heapify(arr, i, 0);\n        }\n    }\n    \n    private static void heapify(int[] arr, int n, int i) {\n        // Storage: heap variables\n        int largest = i;\n        int l = 2 * i + 1;\n        int r = 2 * i + 2;\n        \n        // Process: Check child limits\n        if (l < n && arr[l] > arr[largest]) largest = l;\n        if (r < n && arr[r] > arr[largest]) largest = r;\n        \n        if (largest != i) {\n            int swap = arr[i];\n            arr[i] = arr[largest];\n            arr[largest] = swap;\n            \n            heapify(arr, n, largest);\n        }\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts array reference." },
+        { "type": "storage", "start": 4, "end": 4, "desc": "Allocates array size tracker 'n'." },
+        { "type": "storage", "start": 14, "end": 14, "desc": "Creates temporary swap variable 'temp'." },
+        { "type": "storage", "start": 25, "end": 27, "desc": "Creates largest node tracker, left child 'l' and right child 'r' pointers." },
+        { "type": "process", "start": 7, "end": 9, "desc": "Builds max heap from unsorted array." },
+        { "type": "process", "start": 12, "end": 20, "desc": "Extracts max element to end and calls heapify recursively to balance remaining heap." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the worst-case space complexity of Heap Sort?",
+          "o": ["O(N)", "O(log N)", "O(1)", "O(N^2)"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "radix_sort",
+      "title": "4.4 Radix Sort",
+      "description": "Sort numbers digit by digit starting from least significant digit (LSD) to most significant digit (MSD) using counting sort as a subroutine.",
+      "complexity": { "time": "O(d * (n + k)) where d is digits, k is base", "space": "O(n + k)" },
+      "cheatSheet": "for (int exp = 1; max/exp > 0; exp *= 10) {\n    countingSort(arr, exp);\n}",
+      "code": "import java.util.Arrays;\n\npublic class RadixSort {\n    public static void sort(int[] arr) {\n        // Input: Array to sort\n        int n = arr.length; // Storage\n        \n        // Process: Find max value to determine digits count\n        int max = arr[0];\n        for (int i = 1; i < n; i++) {\n            if (arr[i] > max) max = arr[i];\n        }\n        \n        // Process: Run counting sort for each digit place (exp)\n        for (int exp = 1; max / exp > 0; exp *= 10) {\n            countSort(arr, n, exp);\n        }\n    }\n    \n    private static void countSort(int[] arr, int n, int exp) {\n        // Storage: output and count array\n        int[] output = new int[n];\n        int[] count = new int[10];\n        Arrays.fill(count, 0);\n        \n        // Process: Count frequencies\n        for (int i = 0; i < n; i++) {\n            count[(arr[i] / exp) % 10]++;\n        }\n        for (int i = 1; i < 10; i++) {\n            count[i] += count[i - 1];\n        }\n        for (int i = n - 1; i >= 0; i--) {\n            output[count[(arr[i] / exp) % 10] - 1] = arr[i];\n            count[(arr[i] / exp) % 10]--;\n        }\n        for (int i = 0; i < n; i++) {\n            arr[i] = output[i];\n        }\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 4, "end": 4, "desc": "Accepts array reference." },
+        { "type": "storage", "start": 6, "end": 6, "desc": "Stores size of array n." },
+        { "type": "storage", "start": 9, "end": 9, "desc": "Stores candidate max value to find number of digits." },
+        { "type": "storage", "start": 22, "end": 23, "desc": "Allocates output buffer array and count frequency array." },
+        { "type": "process", "start": 10, "end": 12, "desc": "Finds max value in array." },
+        { "type": "process", "start": 15, "end": 17, "desc": "Iterates exponent value by multiplying by 10 to extract digits sequentially." },
+        { "type": "process", "start": 27, "end": 39, "desc": "Counting sort logic: extracts digit place using division/modulo, computes prefix sum, and constructs sorted output array." }
+      ],
+      "quiz": [
+        {
+          "q": "What stable sorting algorithm is typically used as a subroutine in Radix Sort?",
+          "o": ["Quick Sort", "Bubble Sort", "Counting Sort", "Merge Sort"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "shell_sort",
+      "title": "4.5 Shell Sort",
+      "description": "An extension of insertion sort that allows swapping of far apart elements. The distance between elements is progressively reduced until it becomes 1.",
+      "complexity": { "time": "O(n^2) worst case, O(n log n) best case", "space": "O(1)" },
+      "cheatSheet": "for(int gap = n/2; gap > 0; gap /= 2) {\n  for(int i = gap; i < n; i++) {\n    int temp = arr[i], j = i;\n    while(j >= gap && arr[j - gap] > temp) {\n      arr[j] = arr[j - gap]; j -= gap;\n    }\n    arr[j] = temp;\n  }\n}",
+      "code": "public class ShellSort {\n    public static void sort(int[] arr) {\n        // Input: Array parameter\n        int n = arr.length; // Storage\n        \n        // Process: Shrink gaps\n        for (int gap = n / 2; gap > 0; gap /= 2) {\n            // Perform insertion sort on gapped sub-lists\n            for (int i = gap; i < n; i++) {\n                int temp = arr[i]; // Storage\n                int j = i;         // Storage\n                \n                while (j >= gap && arr[j - gap] > temp) {\n                    arr[j] = arr[j - gap]; // Process: Shift values\n                    j -= gap;\n                }\n                arr[j] = temp; // Process: Insert in slot\n            }\n        }\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts array reference." },
+        { "type": "storage", "start": 4, "end": 4, "desc": "Stores size of array n." },
+        { "type": "storage", "start": 10, "end": 11, "desc": "Allocates temporary variable temp and index variable j." },
+        { "type": "process", "start": 7, "end": 19, "desc": "Iterates gaps, performs gapped insertion comparisons, and shifts elements by gap width." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the initial gap size usually chosen in Shell Sort?",
+          "o": ["1", "n - 1", "n / 2", "n^2"],
+          "a": 2
+        }
+      ]
+    }
+  ]
+}

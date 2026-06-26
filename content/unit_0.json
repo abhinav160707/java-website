@@ -1,0 +1,55 @@
+{
+  "id": "unit_0",
+  "title": "Unit 0: Java Basics",
+  "description": "Get started with the fundamentals of Java syntax, including variables, control structures, standard input/output, and basic structures.",
+  "topics": [
+    {
+      "id": "structure_io",
+      "title": "Structure & Standard I/O",
+      "description": "Every Java program requires a class and a main method. Standard Input is handled using the Scanner class, and output is sent to System.out.",
+      "complexity": { "time": "O(1)", "space": "O(1)" },
+      "cheatSheet": "import java.util.Scanner;\n\nScanner scanner = new Scanner(System.in);\nint num = scanner.nextInt();\nString text = scanner.next();\nSystem.out.println(\"Output: \" + text);\nscanner.close();",
+      "code": "import java.util.Scanner;\n\npublic class BasicIO {\n    public static void main(String[] args) {\n        // Storage: Create variables and Scanner\n        Scanner inputReader = new Scanner(System.in);\n        \n        System.out.print(\"Enter first number: \");\n        int number1 = inputReader.nextInt(); // Input\n        \n        System.out.print(\"Enter second number: \");\n        int number2 = inputReader.nextInt(); // Input\n        \n        // Process: Addition logic\n        int sumResult = number1 + number2;\n        \n        // Output: Print result to screen\n        System.out.println(\"The sum is: \" + sumResult);\n        inputReader.close();\n    } \n}",
+      "ispo": [
+        { "type": "input", "start": 9, "end": 9, "desc": "Reads an integer from standard input using the scanner and stores it in number1." },
+        { "type": "input", "start": 12, "end": 12, "desc": "Reads another integer from standard input using the scanner and stores it in number2." },
+        { "type": "storage", "start": 6, "end": 6, "desc": "Creates the inputReader object of type Scanner to store system input streams in memory." },
+        { "type": "storage", "start": 9, "end": 9, "desc": "Declares and allocates memory for number1 (int)." },
+        { "type": "storage", "start": 12, "end": 12, "desc": "Declares and allocates memory for number2 (int)." },
+        { "type": "storage", "start": 15, "end": 15, "desc": "Declares sumResult variable to store the result of the addition." },
+        { "type": "process", "start": 15, "end": 15, "desc": "Performs the arithmetic addition of number1 and number2." },
+        { "type": "output", "start": 8, "end": 8, "desc": "Prints the prompt message to screen requesting first number." },
+        { "type": "output", "start": 11, "end": 11, "desc": "Prints the prompt message to screen requesting second number." },
+        { "type": "output", "start": 18, "end": 18, "desc": "Outputs the string concatenation and the calculated sumResult to standard output." }
+      ],
+      "quiz": [
+        {
+          "q": "Which class in Java is commonly used to read input from standard input (keyboard)?",
+          "o": ["System.in", "Scanner", "InputStreamReader", "BufferedReader"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "control_arrays",
+      "title": "Control Flow & Arrays",
+      "description": "Control flow defines the execution path (if-else, loops). Arrays are fixed-size sequential memory blocks that store elements of the same type.",
+      "complexity": { "time": "O(n) for array traversal", "space": "O(n) to store n elements" },
+      "cheatSheet": "// Array declaration\nint[] arr = new int[5];\nint[] initialized = {1, 2, 3};\n\n// For loop\nfor(int i = 0; i < arr.length; i++) {\n    arr[i] = i * 2;\n}",
+      "code": "public class ArrayMax {\n    public static int findMax(int[] numbers) {\n        // Input: Array 'numbers' passed as parameter\n        \n        // Storage: Initialize candidate maximum\n        int maxVal = numbers[0];\n        \n        // Process: Loop and condition logic\n        for (int i = 1; i < numbers.length; i++) {\n            if (numbers[i] > maxVal) {\n                maxVal = numbers[i];\n            }\n        }\n        \n        // Output: Return final result\n        return maxVal;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Receives the reference to the array 'numbers' as an input parameter." },
+        { "type": "storage", "start": 6, "end": 6, "desc": "Declares maxVal and allocates memory to store the candidate maximum value." },
+        { "type": "process", "start": 9, "end": 13, "desc": "Iterates through array indices 1 to length-1, comparing elements and conditionally updating maxVal." },
+        { "type": "output", "start": 16, "end": 16, "desc": "Returns maxVal, passing the output result back to the calling function." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the index of the last element in an array named 'values' of size 10?",
+          "o": ["10", "9", "0", "values.length"],
+          "a": 1
+        }
+      ]
+    }
+  ]
+}

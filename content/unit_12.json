@@ -1,0 +1,159 @@
+{
+  "id": "unit_12",
+  "title": "Unit 12: Graph Traversal",
+  "description": "Learn how to traverse graphs (sets of vertices connected by edges) using queue-based BFS and stack-based DFS.",
+  "topics": [
+    {
+      "id": "bfs_dfs",
+      "title": "12.1 & 12.2 Breadth & Depth First Search",
+      "description": "BFS explores neighbors level-by-level using a Queue. DFS explores deep along paths before backtracking using recursion.",
+      "complexity": { "time": "O(V + E) where V is vertices and E is edges", "space": "O(V) for visited set and data structure" },
+      "cheatSheet": "// BFS:\nQueue<Integer> q = new LinkedList<>(); q.add(start);\nwhile(!q.isEmpty()) {\n  int u = q.poll();\n  for(int v : adj.get(u)) {\n    if(!visited[v]) { visited[v]=true; q.add(v); }\n  }\n}",
+      "code": "import java.util.ArrayList;\nimport java.util.LinkedList;\nimport java.util.Queue;\n\npublic class GraphTraversals {\n    // Process: Breadth-First Search (BFS)\n    public static void bfs(int start, ArrayList<ArrayList<Integer>> adj, boolean[] visited) {\n        // Storage: Queue and visited tracker\n        Queue<Integer> queue = new LinkedList<>();\n        \n        visited[start] = true;\n        queue.add(start); // Input source\n        \n        while (!queue.isEmpty()) {\n            int node = queue.poll();\n            System.out.print(node + \" \"); // Output\n            \n            // Process: Queue adjacent unvisited nodes\n            for (int neighbor : adj.get(node)) {\n                if (!visited[neighbor]) {\n                    visited[neighbor] = true;\n                    queue.add(neighbor);\n                }\n            } \n        }\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 7, "end": 7, "desc": "Accepts start node index, adjacency list 'adj', and visited array trackers." },
+        { "type": "input", "start": 12, "end": 12, "desc": "Inserts the source start node into the traversal queue." },
+        { "type": "storage", "start": 9, "end": 9, "desc": "Instantiates a Queue in memory to store vertex traversal frontiers." },
+        { "type": "storage", "start": 15, "end": 15, "desc": "Declares node variable to store active dequeued vertex." },
+        { "type": "storage", "start": 19, "end": 19, "desc": "Declares neighbor variable inside iteration loop." },
+        { "type": "process", "start": 11, "end": 25, "desc": "Drives queue-loop. Dequeues node, inspects adjacency index list, updates visited flags, and enqueues unvisited neighbors." },
+        { "type": "output", "start": 16, "end": 16, "desc": "Prints visited vertices sequentially in BFS layout to standard output." }
+      ],
+      "quiz": [
+        {
+          "q": "Which data structure is typically used internally or explicitly to implement Breadth First Search?",
+          "o": ["Stack", "Queue", "Heap", "Hash Map"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "best_first_search",
+      "title": "12.3 Best First Search",
+      "description": "An informed heuristic search that explores adjacent nodes based on evaluation cost, using a PriorityQueue (Min-Heap) to extract the most promising node next.",
+      "complexity": { "time": "O(V log V + E log V)", "space": "O(V)" },
+      "cheatSheet": "PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> a.cost - b.cost);\npq.add(new Node(start, 0));\n// poll node with lowest heuristic cost",
+      "code": "import java.util.ArrayList;\nimport java.util.PriorityQueue;\n\npublic class BestFirstSearch {\n    public static class Node implements Comparable<Node> {\n        int vertex, cost;\n        Node(int v, int c) { vertex = v; cost = c; }\n        public int compareTo(Node other) { return this.cost - other.cost; }\n    }\n    \n    public static void search(int start, int target, ArrayList<ArrayList<Node>> adj, int V) {\n        // Input: start, target, graph adjacency list with costs\n        \n        // Storage: PriorityQueue and visited tracker\n        PriorityQueue<Node> pq = new PriorityQueue<>();\n        boolean[] visited = new boolean[V];\n        \n        pq.add(new Node(start, 0));\n        visited[start] = true;\n        \n        // Process: Informed greedy search\n        while (!pq.isEmpty()) {\n            Node u = pq.poll(); // Storage: node with minimum cost\n            System.out.print(u.vertex + \" \"); // Output\n            \n            if (u.vertex == target) break; // Goal found\n            \n            for (Node neighbor : adj.get(u.vertex)) {\n                if (!visited[neighbor.vertex]) {\n                    visited[neighbor.vertex] = true;\n                    pq.add(new Node(neighbor.vertex, neighbor.cost));\n                }\n            }\n        }\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 11, "end": 11, "desc": "Accepts start, target destination, and graph adjacency structure." },
+        { "type": "storage", "start": 5, "end": 9, "desc": "Defines class representation Node containing vertex index and heuristic cost." },
+        { "type": "storage", "start": 15, "end": 16, "desc": "Allocates PriorityQueue and visited Boolean tracker array." },
+        { "type": "storage", "start": 23, "end": 23, "desc": "Declares u node pointer to hold popped node of lowest cost." },
+        { "type": "process", "start": 22, "end": 34, "desc": "Iterates. Dequeues lowest-cost node, halts if target is met, and adds unvisited neighbors to PriorityQueue." },
+        { "type": "output", "start": 24, "end": 24, "desc": "Outputs vertex indexes sequentially to standard output." }
+      ],
+      "quiz": [
+        {
+          "q": "What data structure is utilized in Best First Search to sort nodes by heuristic cost dynamically?",
+          "o": ["LinkedList", "Stack", "PriorityQueue (Min-Heap)", "Binary Search Tree"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "bfs_graph_adj",
+      "title": "12.4 Breadth First Traversal of a Graph",
+      "description": "Perform BFS traversal on a graph. BFS explores nodes level by level using a queue.",
+      "complexity": { "time": "O(V + E)", "space": "O(V)" },
+      "cheatSheet": "Queue<Integer> q = new LinkedList<>(); q.add(0);\nwhile(!q.isEmpty()) {\n  int u = q.poll(); System.out.print(u);\n  for(int v : adj.get(u)) if(!visited[v]) { visited[v]=true; q.add(v); }\n}",
+      "code": "import java.util.ArrayList;\nimport java.util.LinkedList;\nimport java.util.Queue;\n\npublic class GraphBFSTraversal {\n    public static ArrayList<Integer> bfsOfGraph(int V, ArrayList<ArrayList<Integer>> adj) {\n        // Input: Vertices count V and adjacency list adj\n        ArrayList<Integer> bfsResult = new ArrayList<>(); // Storage\n        boolean[] visited = new boolean[V];              // Storage\n        \n        Queue<Integer> q = new LinkedList<>(); // Storage\n        q.add(0);\n        visited[0] = true;\n        \n        // Process: BFS queue logic\n        while (!q.isEmpty()) {\n            int node = q.poll(); // Storage\n            bfsResult.add(node);\n            \n            for (int neighbor : adj.get(node)) {\n                if (!visited[neighbor]) {\n                    visited[neighbor] = true;\n                    q.add(neighbor);\n                }\n            }\n        }\n        // Output: Return traversal path list\n        return bfsResult;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 6, "end": 6, "desc": "Accepts vertices count V and graph representation adj." },
+        { "type": "storage", "start": 8, "end": 11, "desc": "Allocates result arraylist, visited boolean flags tracker, and BFS traversal queue." },
+        { "type": "storage", "start": 17, "end": 17, "desc": "Declares node variable to store current dequeued vertex." },
+        { "type": "process", "start": 16, "end": 26, "desc": "Traverses level by level. Enqueues unvisited neighbors and logs visited values." },
+        { "type": "output", "start": 29, "end": 29, "desc": "Returns list containing the traversal path." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the starting node index assumed in this BFS traversal code?",
+          "o": ["1", "0", "V - 1", "Random"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "dfs_disconnected_graph",
+      "title": "12.5 DFS for Disconnected Graph",
+      "description": "Perform DFS traversal on a graph that may contain disconnected components. Loop through all vertices and call DFS helper if unvisited.",
+      "complexity": { "time": "O(V + E)", "space": "O(V) recursion stack" },
+      "cheatSheet": "for (int i = 0; i < V; i++) {\n    if (!visited[i]) dfsHelper(i, adj, visited);\n}",
+      "code": "import java.util.ArrayList;\n\npublic class DisconnectedDFS {\n    public static void dfs(int V, ArrayList<ArrayList<Integer>> adj) {\n        // Input: Vertices V and Adjacency List adj\n        \n        // Storage: Visited tracker\n        boolean[] visited = new boolean[V];\n        \n        // Process: Loop all vertices to handle disconnected components\n        for (int i = 0; i < V; i++) {\n            if (!visited[i]) {\n                dfsHelper(i, adj, visited);\n            }\n        }\n    }\n    \n    private static void dfsHelper(int u, ArrayList<ArrayList<Integer>> adj, boolean[] visited) {\n        visited[u] = true;\n        System.out.print(u + \" \"); // Output\n        \n        for (int v : adj.get(u)) {\n            if (!visited[v]) {\n                dfsHelper(v, adj, visited); // Process recursion\n            }\n        }\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 4, "end": 4, "desc": "Accepts vertices count V and graph representation adj." },
+        { "type": "storage", "start": 8, "end": 8, "desc": "Allocates visited boolean tracker array in memory." },
+        { "type": "process", "start": 11, "end": 15, "desc": "Iterates through all vertices in graph. Initiates DFS traversal for any vertex not yet visited, handling isolated components." },
+        { "type": "process", "start": 22, "end": 26, "desc": "Recurses down adjacent unvisited branches." },
+        { "type": "output", "start": 20, "end": 20, "desc": "Prints node index value to standard output." }
+      ],
+      "quiz": [
+        {
+          "q": "How does this implementation ensure that vertices in disconnected graph components are all visited?",
+          "o": ["By sorting edges", "By running BFS first", "By iterating through all vertices [0...V-1] and calling DFS for any unvisited node", "It cannot visit disconnected nodes"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "bellman_ford_negative_cycle",
+      "title": "12.6 Detect Negative Cycle (Bellman-Ford)",
+      "description": "Detect whether a weighted directed graph contains a negative-weight cycle. Relax every edge V-1 times; if any edge can still be relaxed on one extra pass, a negative cycle exists. Distances start at 0 so a cycle reachable from any vertex is caught.",
+      "complexity": {
+        "time": "O(V * E)",
+        "space": "O(V) for the distance array"
+      },
+      "cheatSheet": "Relax all E edges V-1 times.\nThen do ONE more pass: if any edge still improves dist, a negative cycle exists.\nInit all dist[] = 0 to detect a cycle anywhere in the graph.",
+      "code": "import java.util.Arrays;\n\npublic class BellmanFord {\n    public static boolean hasNegativeCycle(int V, int[][] edges) {\n        // Input: V vertices and an edge list {src, dest, weight}\n        int[] dist = new int[V];   // Storage: distance estimates\n        Arrays.fill(dist, 0);      // 0 => detect a cycle reachable from any vertex\n\n        // Process: relax every edge V-1 times\n        for (int i = 1; i < V; i++) {\n            for (int[] e : edges) {\n                if (dist[e[0]] + e[2] < dist[e[1]]) {\n                    dist[e[1]] = dist[e[0]] + e[2];\n                }\n            }\n        }\n\n        // Process: one extra pass - any relaxation means a negative cycle\n        for (int[] e : edges) {\n            if (dist[e[0]] + e[2] < dist[e[1]]) {\n                return true; // Output: negative cycle found\n            }\n        }\n        return false; // Output: no negative cycle\n    }\n}",
+      "ispo": [
+        {
+          "type": "input",
+          "start": 4,
+          "end": 4,
+          "desc": "Accepts vertex count V and an edge list, each entry {src, dest, weight}."
+        },
+        {
+          "type": "storage",
+          "start": 6,
+          "end": 7,
+          "desc": "Allocates the distance array, initialized to 0 so a cycle reachable from any vertex is detected."
+        },
+        {
+          "type": "process",
+          "start": 10,
+          "end": 16,
+          "desc": "Runs the standard Bellman-Ford relaxation: tightens every edge V-1 times."
+        },
+        {
+          "type": "process",
+          "start": 19,
+          "end": 23,
+          "desc": "Performs one additional relaxation pass; any further improvement proves a negative cycle."
+        },
+        {
+          "type": "output",
+          "start": 21,
+          "end": 21,
+          "desc": "Returns true the moment an edge still relaxes (negative cycle present)."
+        },
+        {
+          "type": "output",
+          "start": 24,
+          "end": 24,
+          "desc": "Returns false when no edge can be relaxed further (no negative cycle)."
+        }
+      ],
+      "quiz": [
+        {
+          "q": "After running the V-1 relaxation passes, how does Bellman-Ford prove a negative cycle exists?",
+          "o": [
+            "It sorts the edges and checks for duplicates",
+            "It does one more relaxation pass; if any edge still reduces a distance, a negative cycle is present",
+            "It counts the number of visited vertices",
+            "It runs a BFS from every vertex"
+          ],
+          "a": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "id": "unit_3",
+  "title": "Unit 3: Sorting",
+  "description": "Organize array elements in ascending order using basic comparison-based algorithms.",
+  "topics": [
+    {
+      "id": "bubble_sort",
+      "title": "3.1 Bubble Sort",
+      "description": "Repeatedly step through the list, compare adjacent elements and swap them if they are in the wrong order. Large values 'bubble' to the end.",
+      "complexity": { "time": "O(n^2)", "space": "O(1)" },
+      "cheatSheet": "for(int i = 0; i < n-1; i++) {\n    for(int j = 0; j < n-i-1; j++) {\n        if(arr[j] > arr[j+1]) { swap(arr, j, j+1); }\n    }\n}",
+      "code": "public class BubbleSort {\n    public static void sort(int[] arr) {\n        // Input: Array 'arr' received for in-place modification\n        int n = arr.length;\n        \n        // Process: Nested swapping passes\n        for (int i = 0; i < n - 1; i++) {\n            for (int j = 0; j < n - i - 1; j++) {\n                if (arr[j] > arr[j + 1]) {\n                    // Storage & Process: Swap logic\n                    int temp = arr[j];\n                    arr[j] = arr[j + 1];\n                    arr[j + 1] = temp;\n                }\n            }\n        }\n        // Output: Array is sorted in-place\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Receives array reference 'arr' which is mutated in-place." },
+        { "type": "storage", "start": 4, "end": 4, "desc": "Declares and stores length n of array." },
+        { "type": "storage", "start": 11, "end": 11, "desc": "Declares temporary swap variable 'temp' to hold element value." },
+        { "type": "process", "start": 7, "end": 16, "desc": "Runs double loop structure. Compares adjacent entries and swaps them if out of order." },
+        { "type": "output", "start": 2, "end": 2, "desc": "Modifications reflect directly on the input array object, so no value is returned." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the average and worst-case time complexity of Bubble Sort?",
+          "o": ["O(n log n)", "O(n)", "O(n^2)", "O(1)"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "selection_sort",
+      "title": "3.2 Selection Sort",
+      "description": "Repeatedly find the minimum element from the unsorted part and put it at the beginning. Minimizes swaps.",
+      "complexity": { "time": "O(n^2)", "space": "O(1)" },
+      "cheatSheet": "for(int i=0; i<n-1; i++) {\n    int minIdx = i;\n    for(int j=i+1; j<n; j++) {\n        if(arr[j] < arr[minIdx]) minIdx = j;\n    }\n    swap(arr, i, minIdx);\n}",
+      "code": "public class SelectionSort {\n    public static void sort(int[] arr) {\n        // Input: Array parameter to sort\n        int n = arr.length;\n        \n        // Process: Select minimum and swap\n        for (int i = 0; i < n - 1; i++) {\n            // Storage: Track index of minimum\n            int minIndex = i;\n            \n            for (int j = i + 1; j < n; j++) {\n                if (arr[j] < arr[minIndex]) {\n                    minIndex = j; // Update storage pointer\n                }\n            }\n            \n            // Process: Swap minimum to its correct place\n            int temp = arr[minIndex];\n            arr[minIndex] = arr[i];\n            arr[i] = temp;\n        }\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Takes array 'arr' to perform selection sort." },
+        { "type": "storage", "start": 4, "end": 4, "desc": "Stores length n of array." },
+        { "type": "storage", "start": 9, "end": 9, "desc": "Declares minIndex to track the index of smallest element found in unsorted portion." },
+        { "type": "storage", "start": 18, "end": 18, "desc": "Declares temp variable used to swap elements in memory." },
+        { "type": "process", "start": 7, "end": 21, "desc": "Finds the smallest element in range [i...n-1] and swaps it with element at position i." }
+      ],
+      "quiz": [
+        {
+          "q": "How many swaps does Selection Sort perform in the worst case?",
+          "o": ["O(n^2)", "O(n)", "O(n log n)", "0"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "insertion_sort",
+      "title": "3.3 Insertion Sort",
+      "description": "Virtually split the array into sorted and unsorted parts. Pick values from the unsorted part and insert them into their correct position in the sorted part.",
+      "complexity": { "time": "O(n^2)", "space": "O(1)" },
+      "cheatSheet": "for(int i=1; i<n; i++) {\n  int key = arr[i], j = i-1;\n  while(j>=0 && arr[j]>key) { arr[j+1]=arr[j]; j--; }\n  arr[j+1]=key;\n}",
+      "code": "public class InsertionSort {\n    public static void sort(int[] arr) {\n        // Input: Array reference\n        int n = arr.length; // Storage\n        \n        // Process: Dynamic shifting inserts\n        for (int i = 1; i < n; ++i) {\n            int key = arr[i]; // Storage: Target element\n            int j = i - 1;    // Storage: Prior element index\n            \n            while (j >= 0 && arr[j] > key) {\n                arr[j + 1] = arr[j]; // Process: Shift values right\n                j = j - 1;\n            }\n            arr[j + 1] = key; // Process: Insert key\n        }\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Takes array to sort in-place." },
+        { "type": "storage", "start": 4, "end": 4, "desc": "Allocates size tracking variable n." },
+        { "type": "storage", "start": 8, "end": 9, "desc": "Allocates key variable to hold the element to insert, and index pointer j to traverse backwards." },
+        { "type": "process", "start": 7, "end": 16, "desc": "Iterates from index 1. Shifts sorted elements right while they are greater than key, and inserts key into the open slot." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the best-case time complexity of Insertion Sort (occurs when the array is already sorted)?",
+          "o": ["O(1)", "O(n)", "O(n log n)", "O(n^2)"],
+          "a": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "id": "unit_6",
+  "title": "Unit 6: Queue",
+  "description": "Learn about First-In-First-Out (FIFO) structures, including circular arrays and deques.",
+  "topics": [
+    {
+      "id": "linear_queue",
+      "title": "6.1 Linear Queue",
+      "description": "A basic FIFO queue implemented using an array, where insertion occurs at the rear and deletion occurs at the front.",
+      "complexity": { "time": "O(1) enqueue, O(n) dequeue (due to element shifting) or O(1) with pointer shift", "space": "O(n) capacity" },
+      "cheatSheet": "int[] queue = new int[capacity];\nint front = 0, rear = 0;\n// Enqueue: queue[rear++] = val;\n// Dequeue: int val = queue[front++];",
+      "code": "public class LinearQueue {\n    // Storage: Array and pointers\n    private int[] arr;\n    private int front, rear, capacity;\n    \n    public LinearQueue(int size) {\n        capacity = size;\n        arr = new int[capacity];\n        front = 0;\n        rear = 0;\n    }\n    \n    // Process & Storage: Enqueue\n    public void enqueue(int item) {\n        if (rear == capacity) {\n            System.out.println(\"Queue is full\"); // Output\n            return;\n        }\n        arr[rear++] = item; // Storage insert\n    }\n    \n    // Process: Dequeue\n    public int dequeue() {\n        if (front == rear) {\n            System.out.println(\"Queue is empty\"); // Output\n            return -1;\n        }\n        int item = arr[front++]; // Storage\n        return item; // Output\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 14, "end": 14, "desc": "Accepts integer value to enqueue." },
+        { "type": "storage", "start": 3, "end": 4, "desc": "Declares internal array storage, front/rear indexes, and queue capacity." },
+        { "type": "storage", "start": 28, "end": 28, "desc": "Declares variable to hold dequeued item value." },
+        { "type": "process", "start": 15, "end": 19, "desc": "Verifies boundary limits and appends item at rear pointer index, shifting it right." },
+        { "type": "process", "start": 24, "end": 28, "desc": "Verifies empty state and increments front pointer to shift active index." },
+        { "type": "output", "start": 16, "end": 16, "desc": "Prints queue full error message." },
+        { "type": "output", "start": 25, "end": 25, "desc": "Prints queue empty error message." },
+        { "type": "output", "start": 29, "end": 29, "desc": "Returns dequeued value." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the main limitation of a simple Linear Queue implemented with shifting front pointers?",
+          "o": ["Elements are sorted automatically", "Array indices before 'front' are wasted and cannot be reused, causing false queue-full states", "It consumes too much memory", "Cannot store integers"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "stack_using_queues",
+      "title": "6.2 Stack using Queues",
+      "description": "Implement a LIFO stack using two FIFO queues. One queue is used to buffer elements and maintain LIFO push/pop order.",
+      "complexity": { "time": "O(n) push, O(1) pop (or vice versa)", "space": "O(n) storage" },
+      "cheatSheet": "Queue<Integer> q1 = new LinkedList<>(), q2 = new LinkedList<>();\n// Push: q2.add(x); while(!q1.isEmpty()) q2.add(q1.poll()); Swap q1 & q2.",
+      "code": "import java.util.LinkedList;\nimport java.util.Queue;\n\npublic class StackUsingQueues {\n    // Storage: Two queues\n    private Queue<Integer> q1 = new LinkedList<>();\n    private Queue<Integer> q2 = new LinkedList<>();\n    \n    // Process & Storage: Push (making push costly)\n    public void push(int x) {\n        q2.add(x); // Storage\n        \n        // Move all elements from q1 to q2\n        while (!q1.isEmpty()) {\n            q2.add(q1.poll());\n        }\n        \n        // Swap queues\n        Queue<Integer> temp = q1;\n        q1 = q2;\n        q2 = temp;\n    }\n    \n    // Output: Pop\n    public int pop() {\n        if (q1.isEmpty()) throw new IllegalStateException(\"Stack empty\");\n        return q1.poll();\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 10, "end": 10, "desc": "Accepts element x to push onto the stack." },
+        { "type": "storage", "start": 6, "end": 7, "desc": "Creates q1 and q2 queue objects to hold element configurations." },
+        { "type": "storage", "start": 19, "end": 19, "desc": "Creates temporary queue variable temp used to execute reference swaps." },
+        { "type": "process", "start": 11, "end": 21, "desc": "Queues new item in q2, flushes q1's contents behind it to reverse FIFO ordering, and swaps queue references." },
+        { "type": "output", "start": 27, "end": 27, "desc": "Polls and returns front of q1 (which is the top of the stack)." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the time complexity of the pop operation in a StackUsingQueues implementation with a costly push?",
+          "o": ["O(1)", "O(n)", "O(log n)", "O(n log n)"],
+          "a": 0
+        }
+      ]
+    },
+    {
+      "id": "queue_using_stacks",
+      "title": "6.3 Queue using Stacks",
+      "description": "Implement a FIFO queue using two LIFO stacks. One stack buffers inputs, while the second yields outputs in FIFO order upon pops.",
+      "complexity": { "time": "O(1) amortized enqueue and dequeue", "space": "O(n)" },
+      "cheatSheet": "Stack<Integer> s1 = new Stack<>(), s2 = new Stack<>();\n// Dequeue: if(s2.isEmpty()) while(!s1.isEmpty()) s2.push(s1.pop()); return s2.pop();",
+      "code": "import java.util.Stack;\n\npublic class QueueUsingStacks {\n    // Storage: Two stacks\n    private Stack<Integer> inputStack = new Stack<>();\n    private Stack<Integer> outputStack = new Stack<>();\n    \n    // Process & Storage: Enqueue\n    public void enqueue(int x) {\n        inputStack.push(x);\n    }\n    \n    // Process & Output: Dequeue\n    public int dequeue() {\n        if (outputStack.isEmpty()) {\n            while (!inputStack.isEmpty()) {\n                outputStack.push(inputStack.pop());\n            }\n        }\n        if (outputStack.isEmpty()) {\n            throw new IllegalStateException(\"Queue empty\");\n        }\n        return outputStack.pop();\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 9, "end": 9, "desc": "Accepts element x to enqueue." },
+        { "type": "storage", "start": 5, "end": 6, "desc": "Allocates inputStack and outputStack variables in memory." },
+        { "type": "process", "start": 15, "end": 19, "desc": "Pops all elements from inputStack and pushes them to outputStack to invert the LIFO ordering if outputStack is empty." },
+        { "type": "output", "start": 23, "end": 23, "desc": "Pops and returns top element from outputStack." }
+      ],
+      "quiz": [
+        {
+          "q": "Why is the dequeue operation considered O(1) amortized despite having a while loop?",
+          "o": ["Because inputStack is always small", "Each element is moved between stacks at most once during its lifetime, yielding a constant average cost per operation", "It is sorted automatically", "Loops in Java run in constant time"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "circular_queue",
+      "title": "6.4 Circular Queue (Array-based)",
+      "description": "A queue implementation using a fixed-size array where the last position connects back to the first to avoid wasted space.",
+      "complexity": { "time": "O(1) for enqueue and dequeue", "space": "O(n) storage capacity" },
+      "cheatSheet": "Enqueue: rear = (rear + 1) % size; arr[rear] = val;\nDequeue: val = arr[front]; front = (front + 1) % size;",
+      "code": "public class CircularQueue {\n    // Storage: Array and pointers\n    private int[] queueArray;\n    private int front, rear, size, capacity;\n\n    public CircularQueue(int cap) {\n        capacity = cap;\n        queueArray = new int[capacity];\n        front = -1;\n        rear = -1;\n        size = 0;\n    }\n\n    // Process & Storage: Add element\n    public boolean enqueue(int value) {\n        if (size == capacity) return false; // Full\n        if (front == -1) front = 0;\n        \n        rear = (rear + 1) % capacity; // Circular increment\n        queueArray[rear] = value;\n        size++;\n        return true;\n    }\n\n    // Process & Storage: Remove element\n    public int dequeue() {\n        if (size == 0) throw new IllegalStateException(\"Queue empty\");\n        \n        int value = queueArray[front];\n        if (front == rear) {\n            front = -1;\n            rear = -1;\n        } else {\n            front = (front + 1) % capacity; // Circular increment\n        }\n        size--;\n        return value; // Output\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 15, "end": 15, "desc": "Takes integer value to add to circular queue." },
+        { "type": "storage", "start": 3, "end": 4, "desc": "Allocates queueArray and front/rear index indicators." },
+        { "type": "storage", "start": 8, "end": 8, "desc": "Allocates size of queueArray in memory." },
+        { "type": "storage", "start": 29, "end": 29, "desc": "Allocates temporary variable value to store data being removed." },
+        { "type": "process", "start": 16, "end": 21, "desc": "Moves rear pointer circularly using modulo and assigns value." },
+        { "type": "process", "start": 27, "end": 36, "desc": "Checks boundaries, reads front value, and increments front pointer circularly." },
+        { "type": "output", "start": 22, "end": 22, "desc": "Returns true to signify successful enqueue." },
+        { "type": "output", "start": 37, "end": 37, "desc": "Returns the dequeued value." }
+      ],
+      "quiz": [
+        {
+          "q": "What operator makes index increments circular in an array queue?",
+          "o": ["Division (/)", "Addition (+)", "Modulo (%)", "Multiplication (*)"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "deque_impl",
+      "title": "6.5 Deque (Doubly Ended Queue)",
+      "description": "A double-ended queue supporting element insertion and deletion at both the front and rear endpoints.",
+      "complexity": { "time": "O(1) for all insert/delete operations", "space": "O(n)" },
+      "cheatSheet": "import java.util.ArrayDeque;\n\nArrayDeque<Integer> dq = new ArrayDeque<>();\ndq.addFirst(10); dq.addLast(20);\nint f = dq.removeFirst(); int l = dq.removeLast();",
+      "code": "import java.util.ArrayDeque;\n\npublic class DequeDemo {\n    public static void runDeque() {\n        // Storage: Instantiation of ArrayDeque\n        ArrayDeque<Integer> deque = new ArrayDeque<>();\n        \n        // Process: Insert operations at both ends\n        deque.addFirst(10); // Insert Front\n        deque.addLast(20);  // Insert Rear\n        deque.addFirst(5);  // Insert Front\n        \n        // Output: Print list\n        System.out.println(\"Deque elements: \" + deque);\n        \n        // Process & Output: Remove operations\n        int frontVal = deque.removeFirst(); // Storage: 5\n        int rearVal = deque.removeLast();   // Storage: 20\n        \n        System.out.println(\"Removed Front: \" + frontVal);\n        System.out.println(\"Removed Rear: \" + rearVal);\n    }\n}",
+      "ispo": [
+        { "type": "storage", "start": 6, "end": 6, "desc": "Allocates an ArrayDeque object in memory." },
+        { "type": "storage", "start": 17, "end": 18, "desc": "Stores removed values in frontVal and rearVal." },
+        { "type": "process", "start": 9, "end": 11, "desc": "Performs operations adding elements to the front and back of the deque." },
+        { "type": "process", "start": 17, "end": 18, "desc": "Pulls elements off the front and back of the deque." },
+        { "type": "output", "start": 14, "end": 14, "desc": "Prints current state of Deque." },
+        { "type": "output", "start": 20, "end": 21, "desc": "Prints popped values." }
+      ],
+      "quiz": [
+        {
+          "q": "Which data structures can be represented or fully implemented by a Deque?",
+          "o": ["Only Stack", "Only Queue", "Both Stack and Queue", "Neither"],
+          "a": 2
+        }
+      ]
+    }
+  ]
+}

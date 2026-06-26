@@ -1,0 +1,271 @@
+{
+  "id": "unit_1",
+  "title": "Unit 1: Getting Started Exercises",
+  "description": "Apply basic logic, math, recursion, and string manipulation on beginner exercises from the laboratory manual.",
+  "topics": [
+    {
+      "id": "sum_last_digits",
+      "title": "1.1 Sum of Last Digits",
+      "description": "Extract the last digit of two integers (ignoring their sign) using the modulo operator (%) and return their sum.",
+      "complexity": { "time": "O(1)", "space": "O(1)" },
+      "cheatSheet": "// Extract last digit\nint lastDigit = Math.abs(num) % 10;",
+      "code": "public class LastDigitSum {\n    public static int addLastDigits(int input1, int input2) {\n        // Input: Two integer parameters\n        \n        // Process: Extract absolute last digits and add\n        int digit1 = Math.abs(input1) % 10;\n        int digit2 = Math.abs(input2) % 10;\n        int result = digit1 + digit2;\n        \n        // Output: Return sum\n        return result;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts two integers input1 and input2 to process." },
+        { "type": "storage", "start": 6, "end": 8, "desc": "Allocates memory for digit1, digit2, and result variables to store units and computed sum." },
+        { "type": "process", "start": 6, "end": 8, "desc": "Applies Math.abs() to discard negative signs, computes modulo 10 to extract units digit, and adds them." },
+        { "type": "output", "start": 11, "end": 11, "desc": "Returns the integer sum back to the caller." }
+      ],
+      "quiz": [
+        {
+          "q": "Why is Math.abs() necessary when extracting digits using modulo 10?",
+          "o": ["To convert to double", "Because Java modulo preserves the negative sign of the dividend (e.g. -267 % 10 = -7)", "To round the number", "To prevent arithmetic overflow"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "is_multiple",
+      "title": "1.2 Is N an exact multiple of M?",
+      "description": "Determine if integer N is an exact multiple of M. Return 2 if true, 1 if false, and 3 if either parameter is 0.",
+      "complexity": { "time": "O(1)", "space": "O(1)" },
+      "cheatSheet": "if (num1 == 0 || num2 == 0) return 3;\nif (num1 % num2 == 0) return 2; else return 1;",
+      "code": "public class MultipleChecker {\n    public static int isMultiple(int num1, int num2) {\n        // Input: Parameters num1 and num2\n        if (num1 == 0 || num2 == 0) {\n            return 3; // Output boundary case\n        }\n        \n        // Process: Check divisibility\n        if (num1 % num2 == 0) {\n            return 2; // Output: Is multiple\n        } else {\n            return 1; // Output: Not multiple\n        }\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Takes the two integer parameters." },
+        { "type": "process", "start": 4, "end": 12, "desc": "Checks if either input is zero, then checks divisibility using the modulo (%) operator." },
+        { "type": "output", "start": 5, "end": 5, "desc": "Returns 3 if either parameter is 0." },
+        { "type": "output", "start": 10, "end": 10, "desc": "Returns 2 if num1 is an exact multiple of num2." },
+        { "type": "output", "start": 12, "end": 12, "desc": "Returns 1 if num1 is not an exact multiple." }
+      ],
+      "quiz": [
+        {
+          "q": "What does the function return if num1 = 12 and num2 = 3?",
+          "o": ["1", "2", "3", "0"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "combine_strings",
+      "title": "1.3 Combine Strings",
+      "description": "Given 2 strings of different lengths, return a combined string in the format: short+long+short.",
+      "complexity": { "time": "O(length of strings)", "space": "O(length of strings)" },
+      "cheatSheet": "int l1 = a.length(), l2 = b.length();\nString result = (l1 < l2) ? (a + b + a) : (b + a + b);",
+      "code": "public class StringCombiner {\n    public static String combine(String a, String b) {\n        // Input: Two strings a and b\n        \n        // Storage: Store lengths\n        int l1 = a.length();\n        int l2 = b.length();\n        \n        // Process: Determine shorter and concatenate\n        String result;\n        if (l1 < l2) {\n            result = a + b + a;\n        } else {\n            result = b + a + b;\n        }\n        \n        // Output: Return final combined string\n        return result;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Receives the two string inputs." },
+        { "type": "storage", "start": 6, "end": 7, "desc": "Declares and stores l1 and l2 representing string lengths." },
+        { "type": "storage", "start": 10, "end": 10, "desc": "Declares result variable to store the final combined string." },
+        { "type": "process", "start": 11, "end": 15, "desc": "Compares length storage variables and structures the concatenated string format (short+long+short)." },
+        { "type": "output", "start": 18, "end": 18, "desc": "Returns the combined string." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the output of combine(\"hi\", \"hello\")?",
+          "o": ["hellohihello", "hihellohi", "hihihello", "hellohellohi"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "even_odd",
+      "title": "1.4 Even or Odd",
+      "description": "Given 5 integers and a type string ('even' or 'odd'), return the count of how many parameters match the requested type.",
+      "complexity": { "time": "O(1)", "space": "O(1)" },
+      "cheatSheet": "int count = 0;\nfor (int val : arr) {\n  if (type.equals(\"even\") && val % 2 == 0) count++;\n}",
+      "code": "public class EvenOddCounter {\n    public static int countMatches(int n1, int n2, int n3, int n4, int n5, String type) {\n        // Input: 5 integer arguments and 1 type request string\n        int[] numbers = {n1, n2, n3, n4, n5}; // Storage\n        int count = 0; // Storage\n        \n        // Process: Loop and condition checks\n        for (int num : numbers) {\n            boolean isEven = (num % 2 == 0);\n            if (type.equalsIgnoreCase(\"even\") && isEven) {\n                count++;\n            } else if (type.equalsIgnoreCase(\"odd\") && !isEven) {\n                count++;\n            }\n        }\n        \n        // Output: Return final counter\n        return count;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts 5 integer parameters and a filter type string." },
+        { "type": "storage", "start": 4, "end": 5, "desc": "Structures integers into numbers array, and allocates count variable to track matches." },
+        { "type": "storage", "start": 9, "end": 9, "desc": "Creates loop check boolean variable isEven to hold temporary parity." },
+        { "type": "process", "start": 8, "end": 15, "desc": "Loops through elements, checks absolute parity and matches against type string, updating count." },
+        { "type": "output", "start": 18, "end": 18, "desc": "Returns matched items count." }
+      ],
+      "quiz": [
+        {
+          "q": "What count does countMatches(12, 17, 19, 14, 115, \"odd\") return?",
+          "o": ["1", "2", "3", "4"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "second_last_digit",
+      "title": "1.5 Second Last Digit of a Number",
+      "description": "Extract the digit in the tens place of a given number. Return -1 if it doesn't exist (single-digit). Always return a positive value.",
+      "complexity": { "time": "O(1)", "space": "O(1)" },
+      "cheatSheet": "int absNum = Math.abs(num);\nif (absNum < 10) return -1;\nreturn (absNum / 10) % 10;",
+      "code": "public class SecondLastDigit {\n    public static int getSecondLast(int num) {\n        // Input: One integer parameter\n        int absVal = Math.abs(num); // Storage\n        \n        // Process: Check boundaries\n        if (absVal < 10) {\n            return -1; // Output: Single digit\n        }\n        \n        // Process: Drop units and read last digit\n        int result = (absVal / 10) % 10; // Storage\n        \n        // Output: Return result\n        return result;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts integer 'num'." },
+        { "type": "storage", "start": 4, "end": 4, "desc": "Stores the absolute value of the number to ignore negative signs." },
+        { "type": "storage", "start": 12, "end": 12, "desc": "Stores the extracted tens digit in result variable." },
+        { "type": "process", "start": 7, "end": 9, "desc": "Checks if number is single digit (no tens place)." },
+        { "type": "process", "start": 12, "end": 12, "desc": "Divides by 10 to shift units out, and takes modulo 10 to extract the second last digit." },
+        { "type": "output", "start": 8, "end": 8, "desc": "Returns -1 for single digit boundary case." },
+        { "type": "output", "start": 15, "end": 15, "desc": "Returns tens digit." }
+      ],
+      "quiz": [
+        {
+          "q": "What is returned for getSecondLast(-197)?",
+          "o": ["1", "9", "7", "-9"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "alternate_string_combiner",
+      "title": "1.6 Alternate String Combiner",
+      "description": "Combine two strings by taking characters alternately. Remaining characters are appended at the end.",
+      "complexity": { "time": "O(n + m)", "space": "O(n + m)" },
+      "cheatSheet": "StringBuilder sb = new StringBuilder();\nfor(int i = 0; i < Math.max(a.length(), b.length()); i++) {\n  if(i < a.length()) sb.append(a.charAt(i));\n  if(i < b.length()) sb.append(b.charAt(i));\n}",
+      "code": "public class AlternateCombiner {\n    public static String combine(String a, String b) {\n        // Input: Strings a and b\n        \n        // Storage: StringBuilder to accumulate output\n        StringBuilder sb = new StringBuilder();\n        int i = 0;\n        \n        // Process: Loop characters alternately\n        while (i < a.length() || i < b.length()) {\n            if (i < a.length()) {\n                sb.append(a.charAt(i));\n            }\n            if (i < b.length()) {\n                sb.append(b.charAt(i));\n            }\n            i++;\n        }\n        \n        // Output: Convert to String and return\n        return sb.toString();\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Takes two input strings." },
+        { "type": "storage", "start": 6, "end": 7, "desc": "Allocates StringBuilder accumulator and index tracking variable in storage memory." },
+        { "type": "process", "start": 10, "end": 18, "desc": "Loops while indices are within boundaries, alternately copying characters into the accumulator." },
+        { "type": "output", "start": 21, "end": 21, "desc": "Converts StringBuilder output storage to String and returns it." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the result of combining 'Hello' and 'World' alternately?",
+          "o": ["HelloWorld", "HWeolrllod", "HelleWorld", "HWeolrld"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "padovan_seq",
+      "title": "1.7 Padovan Sequence",
+      "description": "A sequence defined by the recurrence relationship: P(n) = P(n-2) + P(n-3) with P(0)=P(1)=P(2)=1.",
+      "complexity": { "time": "O(n)", "space": "O(1)" },
+      "cheatSheet": "P(n) = P(n-2) + P(n-3)\nValues: 1, 1, 1, 2, 2, 3, 4, 5, 7, 9, 12...",
+      "code": "public class Padovan {\n    public static void printPadovan(int num) {\n        // Input: 'num' representing terms to print\n        \n        // Storage: Initialize base states\n        int p0 = 1, p1 = 1, p2 = 1;\n        \n        if (num >= 1) System.out.print(p0 + \" \");\n        if (num >= 2) System.out.print(p1 + \" \");\n        if (num >= 3) System.out.print(p2 + \" \");\n        \n        // Process: Compute sequence terms iteratively\n        for (int i = 3; i < num; i++) {\n            int pNext = p0 + p1;\n            System.out.print(pNext + \" \");\n            p0 = p1;\n            p1 = p2;\n            p2 = pNext;\n        }\n        System.out.println(); // Output boundary\n    } \n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Receives count parameter 'num' indicating terms to output." },
+        { "type": "storage", "start": 6, "end": 6, "desc": "Allocates p0, p1, and p2 variables to store the previous three values of the sequence." },
+        { "type": "storage", "start": 14, "end": 14, "desc": "Allocates temporary variable pNext inside loop to hold computed value." },
+        { "type": "process", "start": 13, "end": 19, "desc": "Loop computes the next term as p0 + p1, and shifts variables to slide the calculation window." },
+        { "type": "output", "start": 8, "end": 10, "desc": "Prints base elements directly to standard output." },
+        { "type": "output", "start": 15, "end": 15, "desc": "Prints each computed sequence element to standard output." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the value of P(5) in the Padovan sequence?",
+          "o": ["2", "3", "4", "5"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "leaders_array",
+      "title": "1.8 Leaders in an Array",
+      "description": "An element is a leader if it is greater than all elements on its right. The rightmost element is always a leader.",
+      "complexity": { "time": "O(n)", "space": "O(n)" },
+      "cheatSheet": "// Iterate backwards to find leaders\nint maxFromRight = arr[n-1];\n// Scan right-to-left, updating max",
+      "code": "import java.util.ArrayList;\nimport java.util.Collections;\n\npublic class ArrayLeaders {\n    public static ArrayList<Integer> findLeaders(int[] arr, int n) {\n        // Storage: List to store leaders\n        ArrayList<Integer> leadersList = new ArrayList<>();\n        \n        if (n == 0) return leadersList;\n        \n        // Process: Scan from right to left\n        int currentMax = arr[n - 1];\n        leadersList.add(currentMax); // Rightmost is always a leader\n        \n        for (int i = n - 2; i >= 0; i--) {\n            if (arr[i] >= currentMax) { // Equal or greater\n                currentMax = arr[i];\n                leadersList.add(currentMax);\n            }\n        }\n        \n        // Process: Reverse to restore original order\n        Collections.reverse(leadersList);\n        \n        // Output: Return list of leaders\n        return leadersList;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 5, "end": 5, "desc": "Takes array 'arr' and its size 'n' as input parameters." },
+        { "type": "storage", "start": 7, "end": 7, "desc": "Instantiates an ArrayList in memory to accumulate discovered leader elements." },
+        { "type": "storage", "start": 12, "end": 12, "desc": "Declares and stores currentMax to track the largest element found from the right side scan." },
+        { "type": "process", "start": 15, "end": 20, "desc": "Loops backwards. Checks if current element >= currentMax, updates currentMax and registers leader if true." },
+        { "type": "process", "start": 23, "end": 23, "desc": "Reverses the leaders list to restore the correct left-to-right ordering." },
+        { "type": "output", "start": 26, "end": 26, "desc": "Returns the final list of leader values." }
+      ],
+      "quiz": [
+        {
+          "q": "In the array {16, 17, 4, 3, 5, 2}, what are the leaders?",
+          "o": ["16, 17", "17, 5, 2", "17, 4, 2", "2"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "power_reverse",
+      "title": "1.9 Number Raised to its Reverse",
+      "description": "Find the value of number N raised to the power of its reverse digits R, modulo 10^9 + 7.",
+      "complexity": { "time": "O(log R) using binary exponentiation", "space": "O(1)" },
+      "cheatSheet": "// Binary Exponentiation under Modulo\nlong ans = 1; N = N % mod;\nwhile(R > 0) {\n  if(R % 2 == 1) ans = (ans * N) % mod;\n  N = (N * N) % mod; R /= 2;\n}",
+      "code": "public class NumberReversePower {\n    public static long computePower(int N, int R) {\n        // Input: N (number) and R (reversed digits)\n        long MOD = 1000000007L; // Storage\n        \n        // Process: Binary exponentiation (O(log R))\n        long result = 1;\n        long base = N % MOD;\n        long exp = R;\n        \n        while (exp > 0) {\n            if (exp % 2 == 1) {\n                result = (result * base) % MOD;\n            }\n            base = (base * base) % MOD;\n            exp = exp / 2;\n        }\n        \n        // Output: Return final modulo result\n        return result;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts parameters base N and exponent R." },
+        { "type": "storage", "start": 4, "end": 4, "desc": "Stores prime modulo value (10^9 + 7) as MOD constant." },
+        { "type": "storage", "start": 7, "end": 9, "desc": "Declares storage variables result, base, and exp to execute power modulo logic without modifying parameters." },
+        { "type": "process", "start": 11, "end": 17, "desc": "Implements binary exponentiation loop. Squaring the base and halving exponent in each step." },
+        { "type": "output", "start": 20, "end": 20, "desc": "Returns calculated power modulo result." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the purpose of using modulo 10^9 + 7 in exponentiation algorithms?",
+          "o": ["To speed up execution", "To prevent arithmetic overflow by keeping numbers within standard integer widths", "To check if number is prime", "It has no computational purpose"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "mean_array_recursion",
+      "title": "1.10 Mean of Array using Recursion",
+      "description": "Find the average of array elements recursively. Mean(arr, n) = (Mean(arr, n-1) * (n-1) + arr[n-1]) / n.",
+      "complexity": { "time": "O(n)", "space": "O(n) recursive stack" },
+      "cheatSheet": "double mean(double[] arr, int n) {\n  if(n == 1) return arr[0];\n  return (mean(arr, n-1) * (n-1) + arr[n-1]) / n;\n}",
+      "code": "public class RecursiveMean {\n    public static double findMean(double[] arr, int n) {\n        // Input: Double array and current count n\n        \n        // Process: Base recursion case\n        if (n == 1) {\n            return arr[0]; // Output: base\n        }\n        \n        // Process: Recurse for n-1 and calculate current mean\n        double subMean = findMean(arr, n - 1); // Storage\n        double currentMean = (subMean * (n - 1) + arr[n - 1]) / n; // Storage\n        \n        // Output: Return calculated mean\n        return currentMean;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Receives array reference 'arr' and number of active elements 'n'." },
+        { "type": "storage", "start": 11, "end": 12, "desc": "Declares local variables subMean and currentMean on stack to hold computed step values." },
+        { "type": "process", "start": 6, "end": 12, "desc": "Applies recursive base checks, calculates mean for n-1 subsegment, and extrapolates mean for n elements." },
+        { "type": "output", "start": 7, "end": 7, "desc": "Returns first element directly when base case (n=1) is hit." },
+        { "type": "output", "start": 15, "end": 15, "desc": "Returns overall computed average value." }
+      ],
+      "quiz": [
+        {
+          "q": "What is the base case condition for recursively calculating the mean of an array?",
+          "o": ["n == 0", "n == 1", "n == array length", "arr[0] == null"],
+          "a": 1
+        }
+      ]
+    },
+    {
+      "id": "kth_smallest",
+      "title": "1.11 Kth Smallest Element",
+      "description": "Find the K-th smallest element in a given array of distinct integers.",
+      "complexity": { "time": "O(n log n) by sorting", "space": "O(1)" },
+      "cheatSheet": "Arrays.sort(arr);\nreturn arr[k-1];",
+      "code": "import java.util.Arrays;\n\npublic class KthSmallest {\n    public static int findKth(int[] arr, int k) {\n        // Input: Int array and rank k\n        \n        // Process: Sort array in ascending order\n        Arrays.sort(arr);\n        \n        // Storage: Get target element\n        int result = arr[k - 1];\n        \n        // Output: Return kth smallest value\n        return result;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 4, "end": 4, "desc": "Accepts target array and position ranking 'k'." },
+        { "type": "storage", "start": 11, "end": 11, "desc": "Declares result variable to store selected element from index k-1." },
+        { "type": "process", "start": 8, "end": 8, "desc": "Sorts the input array in-place." },
+        { "type": "output", "start": 14, "end": 14, "desc": "Returns the element at index k-1." }
+      ],
+      "quiz": [
+        {
+          "q": "If array is {7, 10, 4, 3, 20, 15} and k=3, what is the 3rd smallest element?",
+          "o": ["3", "4", "7", "10"],
+          "a": 2
+        }
+      ]
+    },
+    {
+      "id": "count_pairs_sum",
+      "title": "1.12 Count Pairs with Given Sum",
+      "description": "Given an array of integers and target K, find the number of pairs whose sum equals K.",
+      "complexity": { "time": "O(n^2) nested loops (or O(n) using hashing)", "space": "O(1)" },
+      "cheatSheet": "int count = 0;\nfor(int i=0; i<n; i++) {\n  for(int j=i+1; j<n; j++) {\n    if(arr[i] + arr[j] == K) count++;\n  }\n}",
+      "code": "public class PairSumCount {\n    public static int getPairsCount(int[] arr, int n, int K) {\n        // Input: Array, size n, and target sum K\n        int pairCount = 0; // Storage\n        \n        // Process: Double loops search\n        for (int i = 0; i < n; i++) {\n            for (int j = i + 1; j < n; j++) {\n                if (arr[i] + arr[j] == K) {\n                    pairCount++;\n                }\n            }\n        }\n        \n        // Output: Return final pair counter\n        return pairCount;\n    }\n}",
+      "ispo": [
+        { "type": "input", "start": 2, "end": 2, "desc": "Accepts array, length, and sum target K." },
+        { "type": "storage", "start": 4, "end": 4, "desc": "Declares pairCount to accumulate matches." },
+        { "type": "process", "start": 7, "end": 13, "desc": "Double nested iterations comparing each pair combination and incrementing counter if sum matches K." },
+        { "type": "output", "start": 16, "end": 16, "desc": "Returns counted pairs." }
+      ],
+      "quiz": [
+        {
+          "q": "For array {1, 5, 7, 1} and target sum K=6, what is the count of pairs?",
+          "o": ["1", "2", "3", "0"],
+          "a": 1
+        }
+      ]
+    }
+  ]
+}
